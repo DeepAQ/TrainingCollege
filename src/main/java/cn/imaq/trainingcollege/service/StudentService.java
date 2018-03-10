@@ -2,8 +2,12 @@ package cn.imaq.trainingcollege.service;
 
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
+import cn.imaq.trainingcollege.domain.dto.LoginClaimDto;
+import cn.imaq.trainingcollege.domain.dto.LoginResultDto;
+import cn.imaq.trainingcollege.domain.dto.StudentLoginDto;
 import cn.imaq.trainingcollege.domain.dto.StudentRegisterDto;
 import cn.imaq.trainingcollege.domain.entity.Student;
+import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.mapper.StudentMapper;
 import cn.imaq.trainingcollege.support.exception.ServiceException;
 import cn.imaq.trainingcollege.util.HashUtil;
@@ -12,13 +16,27 @@ import cn.imaq.trainingcollege.util.MailUtil;
 import cn.imaq.trainingcollege.util.Sensitive;
 
 import javax.mail.MessagingException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class StudentService {
     @Autumnwired
     private StudentMapper studentMapper;
+
+    public LoginResultDto login(StudentLoginDto dto) {
+        Student student = studentMapper.getByEmail(dto.getEmail());
+        if (student == null) {
+            throw new ServiceException("该邮箱未被注册");
+        }
+        if (!student.getPwdHash().equals(HashUtil.hash(dto.getPassword()))) {
+            throw new ServiceException("密码错误");
+        }
+        if (student.getStatus() == Student.Status.TERMINATED) {
+            throw new ServiceException("该账号已注销，无法再登录");
+        }
+        LoginClaimDto claim = new LoginClaimDto(student.getId(), UserType.Student);
+        String token = JWTUtil.sign(claim);
+        return new LoginResultDto(token, UserType.Student, student.getStatus() == Student.Status.NOT_VERIFIED);
+    }
 
     public void register(StudentRegisterDto dto) {
         Student student = studentMapper.getByEmail(dto.getEmail());
@@ -34,7 +52,7 @@ public class StudentService {
         studentMapper.insert(student);
         try {
             sendActivicationEmail(dto.getEmail());
-        } catch (MessagingException ignored) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -46,9 +64,7 @@ public class StudentService {
         if (student.getStatus() != Student.Status.NOT_VERIFIED) {
             throw new ServiceException("用户已激活，无需重复发送");
         }
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("email", email);
-        String token = JWTUtil.sign(claims);
+        String token = JWTUtil.sign(email);
         String link = Sensitive.BASE_URL + "/activate.html?token=" + token;
         MailUtil.sendAsync(MailUtil.subject("TrainingCollege 学员账号激活")
                 .from("TrainingCollege")

@@ -21,7 +21,7 @@ public class Response<T> {
         return new Response<>(true, object, null);
     }
 
-    public static Response ofFailure(String msg) {
+    public static <T> Response<T> ofFailure(String msg) {
         return new Response<>(true, null, msg);
     }
 }
