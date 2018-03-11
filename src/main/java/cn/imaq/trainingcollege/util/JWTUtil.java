@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Date;
 
@@ -22,7 +23,7 @@ public class JWTUtil {
     public static Object parse(String jwt) {
         Claims claims = Jwts.parser()
                 .setSigningKey(Sensitive.JWT_KEY)
-                .parseClaimsJwt(jwt)
+                .parseClaimsJws(jwt)
                 .getBody();
         if (!claims.containsKey("obj")) {
             return null;
@@ -30,7 +31,7 @@ public class JWTUtil {
         return claims.get("obj");
     }
 
-    public static <T> T parse(String jwt, Class<T> type) {
-        return jsonMapper.convertValue(parse(jwt), type);
+    public static <T> T parse(String jwt, Type type) {
+        return jsonMapper.convertValue(parse(jwt), jsonMapper.constructType(type));
     }
 }

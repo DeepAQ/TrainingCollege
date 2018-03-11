@@ -13,7 +13,7 @@ public class Response<T> {
 
     private String msg;
 
-    public static Response ofSuccess() {
+    public static <T> Response<T> ofSuccess() {
         return new Response<>(true, null, null);
     }
 

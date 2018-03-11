@@ -5,11 +5,9 @@ import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
-import cn.imaq.trainingcollege.domain.dto.LoginResultDto;
-import cn.imaq.trainingcollege.domain.dto.Response;
-import cn.imaq.trainingcollege.domain.dto.StudentLoginDto;
-import cn.imaq.trainingcollege.domain.dto.StudentRegisterDto;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.service.StudentService;
+import cn.imaq.trainingcollege.support.annotation.JWTClaim;
 import org.apache.commons.lang3.StringUtils;
 
 @RestController
@@ -17,6 +15,11 @@ import org.apache.commons.lang3.StringUtils;
 public class AuthController {
     @Autumnwired
     private StudentService studentService;
+
+    @RequestMapping(value = "/status", method = RequestMethod.GET)
+    public Response<LoginClaimDto> getStatus(@JWTClaim LoginClaimDto claim) {
+        return Response.ofSuccess(claim);
+    }
 
     @RequestMapping("/student/register")
     public Response studentReg(@JSONBody StudentRegisterDto dto) {
