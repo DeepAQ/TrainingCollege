@@ -12,6 +12,7 @@ public class ExceptionHandlerAdvice {
         if (t instanceof ServiceException) {
             return Response.ofFailure(t.getMessage());
         }
+        t.printStackTrace();
         return Response.ofFailure("服务器错误: " + t.getMessage());
     }
 }

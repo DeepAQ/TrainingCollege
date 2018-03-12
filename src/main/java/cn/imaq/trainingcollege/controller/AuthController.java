@@ -6,6 +6,7 @@ import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
 import cn.imaq.trainingcollege.domain.dto.*;
+import cn.imaq.trainingcollege.service.CollegeService;
 import cn.imaq.trainingcollege.service.StudentService;
 import cn.imaq.trainingcollege.support.annotation.JWTClaim;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 public class AuthController {
     @Autumnwired
     private StudentService studentService;
+
+    @Autumnwired
+    private CollegeService collegeService;
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public Response<LoginClaimDto> getStatus(@JWTClaim LoginClaimDto claim) {
@@ -36,5 +40,21 @@ public class AuthController {
             return Response.ofFailure("请填写 E-mail 和密码");
         }
         return Response.ofSuccess(studentService.login(dto));
+    }
+
+    @RequestMapping("/college/register")
+    public Response<Integer> collegeReg(@JSONBody CollegeRegisterDto dto) {
+        if (StringUtils.isAnyBlank(dto.getName(), dto.getPassword(), dto.getLocation())) {
+            return Response.ofFailure("请填写完整注册信息");
+        }
+        return Response.ofSuccess(collegeService.register(dto));
+    }
+
+    @RequestMapping("/college/login")
+    public Response<LoginResultDto> collegeLogin(@JSONBody CollegeLoginDto dto) {
+        if (StringUtils.isAnyBlank(dto.getId(), dto.getPassword())) {
+            return Response.ofFailure("请填写机构编号和密码");
+        }
+        return Response.ofSuccess(collegeService.login(dto));
     }
 }

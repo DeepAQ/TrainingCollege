@@ -13,7 +13,7 @@ import cn.imaq.trainingcollege.support.exception.ServiceException;
 import cn.imaq.trainingcollege.util.HashUtil;
 import cn.imaq.trainingcollege.util.JWTUtil;
 import cn.imaq.trainingcollege.util.MailUtil;
-import cn.imaq.trainingcollege.util.Sensitive;
+import cn.imaq.trainingcollege.config.Sensitive;
 
 import javax.mail.MessagingException;
 

@@ -1,5 +1,6 @@
 package cn.imaq.trainingcollege.util;
 
+import cn.imaq.trainingcollege.config.Sensitive;
 import io.github.biezhi.ome.OhMyEmail;
 
 import javax.mail.MessagingException;

@@ -5,7 +5,7 @@ import cn.imaq.autumn.rest.param.value.ParamValue;
 import cn.imaq.autumn.rest.param.value.SingleValue;
 import cn.imaq.trainingcollege.support.annotation.JWTClaim;
 import cn.imaq.trainingcollege.util.JWTUtil;
-import cn.imaq.trainingcollege.util.Sensitive;
+import cn.imaq.trainingcollege.config.Sensitive;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface StudentMapper {
-    @Insert("INSERT INTO `students` (`email`, `pwdhash`, `name`, `status`) VALUES (#{email}, #{pwdHash}, #{name}, #{status})")
+    @Insert("INSERT INTO `students` (`email`, `pwd_hash`, `name`, `status`) VALUES (#{email}, #{pwdHash}, #{name}, #{status})")
     void insert(Student po);
 
     @Select("SELECT * FROM `students` WHERE `email` = #{email}")
