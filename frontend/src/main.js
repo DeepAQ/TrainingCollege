@@ -10,6 +10,29 @@ Vue.config.productionTip = false
 
 Vue.use(iView)
 
+window.$state = new Vue({
+  data: {
+    loginName: localStorage.loginName,
+    loginType: localStorage.loginType,
+    loggedIn: false
+  },
+  methods: {
+    login (token, name, type) {
+      localStorage.token = token
+      this.loginName = localStorage.loginName = name
+      this.loginType = localStorage.loginType = type
+      this.loggedIn = true
+    },
+    logout () {
+      delete localStorage.token
+      delete localStorage.loginName
+      delete localStorage.loginType
+      this.loginName = this.loginType = ''
+      this.loggedIn = false
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -2,11 +2,11 @@
   <div>
     <Dropdown placement="bottom-end" trigger="click" @on-click="menuClick">
       <a href="javascript:">
-        <span v-if="displayName">{{ displayName }}</span>
+        <span v-if="loggedIn">{{ loginName }} ({{ loginType }})</span>
         <span v-else>游客</span>
         <Icon type="arrow-down-b"></Icon>
       </a>
-      <DropdownMenu slot="list" v-if="displayName">
+      <DropdownMenu slot="list" v-if="loggedIn">
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
       <DropdownMenu slot="list" v-else>
@@ -65,7 +65,6 @@ export default {
   name: "UserInfo",
   data() {
     return {
-      displayName: localStorage.userName,
       modalLogin: false,
       modalRegister: false,
       userType: 'Student',
@@ -79,6 +78,15 @@ export default {
     };
   },
   computed: {
+    loggedIn () {
+      return window.$state.loggedIn
+    },
+    loginName () {
+      return window.$state.loginName
+    },
+    loginType () {
+      return window.$state.loginType
+    },
     loginPrompt () {
       switch (this.userType) {
         case 'Student':
@@ -104,9 +112,7 @@ export default {
           this.modalRegister = true
           break
         case 'logout':
-          delete localStorage.userName
-          delete localStorage.token
-          this.displayName = false
+          window.$state.logout()
       }
     },
     processLogin (path, data) {
@@ -126,7 +132,7 @@ export default {
             }
           });
         } else {
-          this.displayName = localStorage.userName = `${result.displayName} (${result.userType})`
+          window.$state.login(result.token, result.displayName, result.userType)
           this.$Message.info('登录成功')
         }
         this.modalLogin = false
