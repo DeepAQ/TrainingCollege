@@ -11,7 +11,7 @@ public class MailUtil {
     private static ExecutorService executor = Executors.newCachedThreadPool();
 
     static {
-        OhMyEmail.config(OhMyEmail.SMTP_ENT_QQ(true), Sensitive.MAIL_USERNAME, Sensitive.MAIL_PASSWORD);
+        OhMyEmail.config(OhMyEmail.SMTP_ENT_QQ(false), Sensitive.MAIL_USERNAME, Sensitive.MAIL_PASSWORD);
     }
 
     public static OhMyEmail subject(String subject) throws MessagingException {

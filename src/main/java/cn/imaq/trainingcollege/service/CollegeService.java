@@ -34,7 +34,8 @@ public class CollegeService {
         }
         LoginClaimDto claim = new LoginClaimDto(college.getId(), UserType.College);
         String token = JWTUtil.sign(claim);
-        return new LoginResultDto(token, UserType.College, false);
+        CollegeProfile profile = collegeProfileMapper.getById(college.getProfileId());
+        return new LoginResultDto(token, profile.getName(), UserType.College, false);
     }
 
     public Integer register(CollegeRegisterDto dto) {

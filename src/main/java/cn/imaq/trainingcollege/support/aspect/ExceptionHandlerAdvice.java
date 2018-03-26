@@ -7,7 +7,7 @@ import cn.imaq.trainingcollege.support.exception.ServiceException;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
-    @ExceptionHandler
+    @ExceptionHandler(status = 200)
     public Response handle(Throwable t) {
         if (t instanceof ServiceException) {
             return Response.ofFailure(t.getMessage());

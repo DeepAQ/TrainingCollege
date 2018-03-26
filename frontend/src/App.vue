@@ -25,6 +25,7 @@
             </menu-item>
           </div>
         </Menu>
+        <UserInfo/>
       </Header>
       <Content :style="{padding: '0 50px'}">
         <Breadcrumb :style="{margin: '20px 0'}">
@@ -47,7 +48,10 @@
 </template>
 
 <script>
+import UserInfo from './components/UserInfo'
+
 export default {
+  components: { UserInfo },
   name: "App"
 };
 </script>

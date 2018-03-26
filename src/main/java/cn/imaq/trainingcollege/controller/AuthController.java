@@ -6,6 +6,7 @@ import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
 import cn.imaq.trainingcollege.domain.dto.*;
+import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.service.CollegeService;
 import cn.imaq.trainingcollege.service.StudentService;
 import cn.imaq.trainingcollege.support.annotation.JWTClaim;
@@ -40,6 +41,15 @@ public class AuthController {
             return Response.ofFailure("请填写 E-mail 和密码");
         }
         return Response.ofSuccess(studentService.login(dto));
+    }
+
+    @RequestMapping("/student/resend")
+    public Response resendEmail(@JWTClaim LoginClaimDto claim) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("登录信息无效，请重新登录");
+        }
+        studentService.sendActivicationEmail(claim.getUserId());
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/college/register")

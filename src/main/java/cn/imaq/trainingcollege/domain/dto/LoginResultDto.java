@@ -9,6 +9,8 @@ import lombok.Data;
 public class LoginResultDto {
     private String token;
 
+    private String displayName;
+
     private UserType userType;
 
     private boolean needVerify;
