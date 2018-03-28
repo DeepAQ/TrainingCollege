@@ -14,7 +14,7 @@ window.$state = new Vue({
   data: {
     loginName: localStorage.loginName,
     loginType: localStorage.loginType,
-    loggedIn: false
+    loggedIn: localStorage.token != ''
   },
   methods: {
     login (token, name, type) {
