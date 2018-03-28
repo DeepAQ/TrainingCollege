@@ -3,10 +3,7 @@ package cn.imaq.trainingcollege.service;
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.config.Sensitive;
-import cn.imaq.trainingcollege.domain.dto.LoginClaimDto;
-import cn.imaq.trainingcollege.domain.dto.LoginResultDto;
-import cn.imaq.trainingcollege.domain.dto.StudentLoginDto;
-import cn.imaq.trainingcollege.domain.dto.StudentRegisterDto;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.Student;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.mapper.StudentMapper;
@@ -31,7 +28,7 @@ public class StudentService {
         if (student.getStatus() == Student.Status.TERMINATED) {
             throw new ServiceException("该账号已注销，无法再登录");
         }
-        LoginClaimDto claim = new LoginClaimDto(student.getId(), UserType.Student);
+        LoginClaim claim = new LoginClaim(student.getId(), UserType.Student);
         String token = JWTUtil.sign(claim);
         return new LoginResultDto(token, student.getName(), UserType.Student, student.getStatus() == Student.Status.NOT_VERIFIED);
     }
@@ -70,5 +67,28 @@ public class StudentService {
         } catch (Exception e) {
             throw new ServiceException(e);
         }
+    }
+
+    public StudentProfileDto getProfile(Integer id) {
+        Student student = studentMapper.getById(id);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        return StudentProfileDto.builder()
+                .email(student.getEmail())
+                .name(student.getName())
+                .status(student.getStatus())
+                .build();
+    }
+
+    public void terminate(Integer id) {
+        Student student = studentMapper.getById(id);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        if (student.getStatus() != Student.Status.VERIFIED) {
+            throw new ServiceException("该状态下无法注销");
+        }
+        studentMapper.updateStatus(id, Student.Status.TERMINATED);
     }
 }

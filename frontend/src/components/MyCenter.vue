@@ -6,14 +6,14 @@
           <MenuItem name="profile">
             个人资料
           </MenuItem>
-          <MenuItem name="terminate">
-            取消会员
-          </MenuItem>
           <MenuItem name="level">
             会员级别
           </MenuItem>
           <MenuItem name="points">
             我的积分
+          </MenuItem>
+          <MenuItem name="terminate">
+            账户注销
           </MenuItem>
         </MenuGroup>
         <MenuGroup title="订单管理">
@@ -29,7 +29,7 @@
         </MenuGroup>
       </Menu>
     </Sider>
-    <Content style="background-color: #fff; padding-left: 20px;">
+    <Content style="background-color: #fff; padding-left: 30px;">
       <router-view></router-view>
     </Content>
   </Layout>

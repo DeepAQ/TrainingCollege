@@ -22,7 +22,7 @@ public class AuthController {
     private CollegeService collegeService;
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
-    public Response<LoginClaimDto> getStatus(@JWTClaim LoginClaimDto claim) {
+    public Response<LoginClaim> getStatus(@JWTClaim LoginClaim claim) {
         return Response.ofSuccess(claim);
     }
 
@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @RequestMapping("/student/resend")
-    public Response resendEmail(@JWTClaim LoginClaimDto claim) {
+    public Response resendEmail(@JWTClaim LoginClaim claim) {
         if (claim == null || claim.getUserType() != UserType.Student) {
             return Response.ofFailure("登录信息无效，请重新登录");
         }

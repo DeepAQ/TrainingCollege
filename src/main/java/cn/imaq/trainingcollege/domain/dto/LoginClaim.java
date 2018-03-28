@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginClaimDto {
+public class LoginClaim {
     private Integer userId;
 
     private UserType userType;

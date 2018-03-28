@@ -17,4 +17,7 @@ public interface StudentMapper {
 
     @Select("SELECT * FROM `students` WHERE `id` = #{studentId}")
     Student getById(Integer studentId);
+
+    @Select("UPDATE `students` SET `status` = #{arg1} WHERE `id` = #{arg0}")
+    Student updateStatus(Integer studentId, Student.Status status);
 }

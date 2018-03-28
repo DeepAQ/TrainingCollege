@@ -19,7 +19,6 @@
             <version>1.16.20</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>cn.imaq</groupId>
             <artifactId>tompuss</artifactId>
@@ -29,6 +28,11 @@
             <groupId>cn.imaq</groupId>
             <artifactId>autumn-rest</artifactId>
             <version>0.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imaq</groupId>
+            <artifactId>autumn-aop</artifactId>
+            <version>0.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

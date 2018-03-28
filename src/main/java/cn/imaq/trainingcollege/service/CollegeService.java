@@ -4,7 +4,7 @@ import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.dto.CollegeLoginDto;
 import cn.imaq.trainingcollege.domain.dto.CollegeRegisterDto;
-import cn.imaq.trainingcollege.domain.dto.LoginClaimDto;
+import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.LoginResultDto;
 import cn.imaq.trainingcollege.domain.entity.College;
 import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
@@ -32,7 +32,7 @@ public class CollegeService {
         if (college.getProfileId() == null) {
             throw new ServiceException("该账号尚未被审批，暂不能登录");
         }
-        LoginClaimDto claim = new LoginClaimDto(college.getId(), UserType.College);
+        LoginClaim claim = new LoginClaim(college.getId(), UserType.College);
         String token = JWTUtil.sign(claim);
         CollegeProfile profile = collegeProfileMapper.getById(college.getProfileId());
         return new LoginResultDto(token, profile.getName(), UserType.College, false);

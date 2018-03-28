@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import MyCenter from '@/components/MyCenter'
+import StudentProfile from '@/components/student/Profile'
+import StudentTerminate from '@/components/student/Terminate'
 
 Vue.use(Router)
 
@@ -14,7 +16,11 @@ export default new Router({
       children: [
         {
           path: 'student/profile',
-          component: HelloWorld
+          component: StudentProfile
+        },
+        {
+          path: 'student/terminate',
+          component: StudentTerminate
         },
         {
           path: ':type/:op',
