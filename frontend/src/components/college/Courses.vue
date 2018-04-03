@@ -11,10 +11,10 @@
     <Table stripe :columns="cols" :data="courses"></Table>
     <Modal v-model="addNew" width="400">
       <p slot="header">添加课程计划</p>
-      <div style="text-align: center;">
+      <div>
         <Input v-model="newCourse.title" size="large" placeholder="课程名称" />
         <Input v-model="newCourse.tags" size="large" placeholder="课程类别" />
-        <Input v-model="newCourse.description" size="large" type="textarea" placeholder="课程简介" />
+        <Input v-model="newCourse.description" size="large" autosize type="textarea" placeholder="课程简介" />
         <DatePicker v-model="startDate" type="date" size="large" placeholder="开始时间" @on-change="dateChange"/>
         <div>
           <InputNumber :max="10" :min="1" v-model="newCourse.period"></InputNumber> 课时 / 周 *
@@ -27,13 +27,16 @@
         </Button>
       </div>
     </Modal>
+    <ClassManage ref="cm"/>
   </div>
 </template>
 
 <script>
 import api from '@/api'
+import ClassManage from './ClassManage'
 
 export default {
+  components: { ClassManage },
   data () {
     return {
       addNew: false,
@@ -65,6 +68,8 @@ export default {
                 },
                 on: {
                   click: () => {
+                    this.$refs.cm.course = params.row.id
+                    this.$refs.cm.show = true
                   }
                 }
               }, '班级管理')

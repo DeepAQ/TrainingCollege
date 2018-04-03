@@ -14,6 +14,9 @@ public interface CourseMapper {
     @Options(useGeneratedKeys = true)
     void insert(Course po);
 
+    @Select("SELECT * FROM `courses` WHERE `id` = #{id}")
+    Course getById(Integer id);
+
     @Select("SELECT * FROM `courses` WHERE `college_id` = #{collegeId} ORDER BY `start_time` DESC")
     List<Course> getByCollegeId(Integer collegeId);
 }
