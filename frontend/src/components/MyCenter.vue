@@ -1,30 +1,66 @@
 <template>
   <Layout>
-    <Sider>
+    <Sider style="background-color: white;">
       <Menu width="auto" :active-name="active" v-if="loginType == 'Student'" @on-select="studentMenuSelect">
         <MenuGroup title="基本信息">
           <MenuItem name="profile">
-            个人资料
+            <Icon type="person"></Icon> 个人资料
           </MenuItem>
           <MenuItem name="level">
-            会员级别
+            <Icon type="connection-bars"></Icon> 会员级别
           </MenuItem>
           <MenuItem name="points">
-            我的积分
+            <Icon type="star"></Icon> 我的积分
           </MenuItem>
           <MenuItem name="terminate">
-            账户注销
+            <Icon type="close"></Icon> 账户注销
           </MenuItem>
         </MenuGroup>
         <MenuGroup title="订单管理">
           <MenuItem name="orders">
-            我的订单
+            <Icon type="android-list"></Icon> 我的订单
           </MenuItem>
           <MenuItem name="classes">
-            我的课程
+            <Icon type="university"></Icon> 我的课程
           </MenuItem>
           <MenuItem name="stats">
-            订单统计
+            <Icon type="pie-graph"></Icon> 数据统计
+          </MenuItem>
+        </MenuGroup>
+      </Menu>
+
+      <Menu width="auto" :active-name="active" v-if="loginType == 'College'" @on-select="collegeMenuSelect">
+        <MenuGroup title="基本信息">
+          <MenuItem name="profile">
+            <Icon type="person-stalker"></Icon> 机构信息
+          </MenuItem>
+        </MenuGroup>
+        <MenuGroup title="课程管理">
+          <MenuItem name="plans">
+            <Icon type="university"></Icon> 课程计划
+          </MenuItem>
+          <MenuItem name="classes">
+            <Icon type="card"></Icon> 现场缴费
+          </MenuItem>
+          <MenuItem name="records">
+            <Icon type="clipboard"></Icon> 听课登记
+          </MenuItem>
+          <MenuItem name="stats">
+            <Icon type="pie-graph"></Icon> 数据统计
+          </MenuItem>
+        </MenuGroup>
+      </Menu>
+
+      <Menu width="auto" :active-name="active" v-if="loginType == 'Manager'" @on-select="collegeMenuSelect">
+        <MenuGroup title="系统管理">
+          <MenuItem name="permit">
+            机构审批
+          </MenuItem>
+          <MenuItem name="classes">
+            财务结算
+          </MenuItem>
+          <MenuItem name="stats">
+            <Icon type="pie-graph"></Icon> 数据统计
           </MenuItem>
         </MenuGroup>
       </Menu>
@@ -54,11 +90,16 @@ export default {
   methods: {
     studentMenuSelect (name) {
       this.$router.push(`/my/student/${name}`)
+    },
+    collegeMenuSelect (name) {
+      this.$router.push(`/my/college/${name}`)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.ivu-icon {
+  width: 12px;
+}
 </style>

@@ -2,7 +2,7 @@
   <div>
     <h2>注销账户</h2>
     <Alert type="warning" show-icon>
-      警告！
+      注意！
       <template slot="desc">
         注销账户后，您的订单、课程等数据不会删除，但您将无法再次登录。该操作不可逆转。
       </template>

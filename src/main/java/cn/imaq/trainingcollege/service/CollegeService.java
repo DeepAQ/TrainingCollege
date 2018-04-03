@@ -2,10 +2,7 @@ package cn.imaq.trainingcollege.service;
 
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
-import cn.imaq.trainingcollege.domain.dto.CollegeLoginDto;
-import cn.imaq.trainingcollege.domain.dto.CollegeRegisterDto;
-import cn.imaq.trainingcollege.domain.dto.LoginClaim;
-import cn.imaq.trainingcollege.domain.dto.LoginResultDto;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.College;
 import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
@@ -51,5 +48,33 @@ public class CollegeService {
                 .build();
         collegeMapper.insert(college);
         return college.getId();
+    }
+
+    public CollegeProfileDto getProfiles(Integer collegeId) {
+        College college = collegeMapper.getById(collegeId);
+        if (college == null) {
+            throw new ServiceException("机构不存在");
+        }
+        CollegeProfile current = null, pending = null;
+        if (college.getProfileId() != null) {
+            current = collegeProfileMapper.getById(college.getProfileId());
+        }
+        if (college.getPendingProfileId() != null) {
+            pending = collegeProfileMapper.getById(college.getPendingProfileId());
+        }
+        return CollegeProfileDto.builder()
+                .id(collegeId)
+                .current(current)
+                .pending(pending)
+                .build();
+    }
+
+    public void editProfile(Integer collegeId, CollegeProfile profile) {
+        College college = collegeMapper.getById(collegeId);
+        if (college == null) {
+            throw new ServiceException("机构不存在");
+        }
+        collegeProfileMapper.insert(profile);
+        collegeMapper.updatePendingProfile(collegeId, profile.getId());
     }
 }

@@ -54,4 +54,8 @@ export default {
 h2, .ivu-row {
   padding: 10px 0;
 }
+
+.ivu-icon {
+  width: 16px;
+}
 </style>

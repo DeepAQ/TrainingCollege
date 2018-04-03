@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import MyCenter from '@/components/MyCenter'
 import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
+import CollegeProfile from '@/components/college/Profile'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ export default new Router({
         {
           path: 'student/terminate',
           component: StudentTerminate
+        },
+        {
+          path: 'college/profile',
+          component: CollegeProfile
         },
         {
           path: ':type/:op',

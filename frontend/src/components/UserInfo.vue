@@ -113,6 +113,7 @@ export default {
           break
         case 'logout':
           window.$state.logout()
+          window.location = '/'
       }
     },
     processLogin (path, data) {

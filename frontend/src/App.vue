@@ -3,7 +3,7 @@
     <Layout>
       <Header>
         <div class="layout-logo">
-          TrainingCollege
+          <Icon type="university"></Icon> TrainingCollege
         </div>
         <Menu mode="horizontal" theme="dark" active-name="1">
           <div class="layout-nav">
