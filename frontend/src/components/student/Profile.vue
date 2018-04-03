@@ -20,7 +20,6 @@
 import api from '@/api'
 
 export default {
-  name: 'StudentProfile',
   data () {
     return {
       profile: {}

@@ -36,10 +36,10 @@
           </MenuItem>
         </MenuGroup>
         <MenuGroup title="课程管理">
-          <MenuItem name="plans">
+          <MenuItem name="courses">
             <Icon type="university"></Icon> 课程计划
           </MenuItem>
-          <MenuItem name="classes">
+          <MenuItem name="sale">
             <Icon type="card"></Icon> 现场缴费
           </MenuItem>
           <MenuItem name="records">

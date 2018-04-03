@@ -24,7 +24,6 @@
 import api from '@/api'
 
 export default {
-  name: 'StudentTerminate',
   data () {
     return {
       ack: false
