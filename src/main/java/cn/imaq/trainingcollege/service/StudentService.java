@@ -25,9 +25,6 @@ public class StudentService {
         if (!student.getPwdHash().equals(HashUtil.hash(dto.getPassword()))) {
             throw new ServiceException("密码错误");
         }
-        if (student.getStatus() == Student.Status.TERMINATED) {
-            throw new ServiceException("该账号已注销，无法再登录");
-        }
         LoginClaim claim = new LoginClaim(student.getId(), UserType.Student);
         String token = JWTUtil.sign(claim);
         return new LoginResultDto(token, student.getName(), UserType.Student, student.getStatus() == Student.Status.NOT_VERIFIED);

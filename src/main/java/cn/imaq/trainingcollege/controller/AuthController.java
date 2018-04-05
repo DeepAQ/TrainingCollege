@@ -8,6 +8,7 @@ import cn.imaq.autumn.rest.core.RequestMethod;
 import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.service.CollegeService;
+import cn.imaq.trainingcollege.service.ManagerService;
 import cn.imaq.trainingcollege.service.StudentService;
 import cn.imaq.trainingcollege.support.annotation.JWTClaim;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,9 @@ public class AuthController {
 
     @Autumnwired
     private CollegeService collegeService;
+
+    @Autumnwired
+    private ManagerService managerService;
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public Response<LoginClaim> getStatus(@JWTClaim LoginClaim claim) {
@@ -66,5 +70,13 @@ public class AuthController {
             return Response.ofFailure("请填写机构编号和密码");
         }
         return Response.ofSuccess(collegeService.login(dto));
+    }
+
+    @RequestMapping("/manager/login")
+    public Response<LoginResultDto> collegeLogin(@JSONBody ManagerLoginDto dto) {
+        if (StringUtils.isAnyBlank(dto.getUsername(), dto.getPassword())) {
+            return Response.ofFailure("请填写用户名和密码");
+        }
+        return Response.ofSuccess(managerService.login(dto));
     }
 }

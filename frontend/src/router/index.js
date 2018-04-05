@@ -6,6 +6,7 @@ import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
 import CollegeProfile from '@/components/college/Profile'
 import CollegeCourses from '@/components/college/Courses'
+import ManagerPermit from '@/components/manager/Permit'
 
 Vue.use(Router)
 
@@ -31,6 +32,10 @@ export default new Router({
         {
           path: 'college/courses',
           component: CollegeCourses
+        },
+        {
+          path: 'manager/permit',
+          component: ManagerPermit
         },
         {
           path: ':type/:op',

@@ -12,6 +12,9 @@ import cn.imaq.trainingcollege.support.exception.ServiceException;
 import cn.imaq.trainingcollege.util.HashUtil;
 import cn.imaq.trainingcollege.util.JWTUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CollegeService {
     @Autumnwired
@@ -76,5 +79,33 @@ public class CollegeService {
         }
         collegeProfileMapper.insert(profile);
         collegeMapper.updatePendingProfile(collegeId, profile.getId());
+    }
+
+    public CollegePendingDto getPendings() {
+        List<CollegeInfoDto> newProfiles = new ArrayList<>();
+        List<CollegeInfoDto> editProfiles = new ArrayList<>();
+        collegeMapper.getPendings().stream().forEach(x -> {
+            String name;
+            if (x.getProfileId() != null) {
+                name = collegeProfileMapper.getById(x.getProfileId()).getName();
+                editProfiles.add(new CollegeInfoDto(x.getId(), name, x.getProfileId(), x.getPendingProfileId()));
+            } else {
+                name = collegeProfileMapper.getById(x.getPendingProfileId()).getName();
+                newProfiles.add(new CollegeInfoDto(x.getId(), name, x.getProfileId(), x.getPendingProfileId()));
+            }
+        });
+        return new CollegePendingDto(newProfiles, editProfiles);
+    }
+
+    public void permitPending(Integer collegeId, boolean allow) {
+        College college = collegeMapper.getById(collegeId);
+        if (college == null) {
+            throw new ServiceException("机构不存在");
+        }
+        if (allow && college.getPendingProfileId() != null) {
+            collegeMapper.updateProfile(college.getId(), college.getPendingProfileId());
+        } else {
+            collegeMapper.updatePendingProfile(college.getId(), null);
+        }
     }
 }

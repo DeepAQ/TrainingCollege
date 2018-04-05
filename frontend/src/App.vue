@@ -29,7 +29,7 @@
       </Content>
       <Footer>
         &copy; 2018 DeepAQ.
-        技术构架 <a href="https://github.com/DeepAQ/Autumn" target="_blank">Autumn</a>
+        技术构架 <a href="https://github.com/DeepAQ/Autumn" target="_blank">Autumn</a>.
       </Footer>
     </Layout>
   </div>

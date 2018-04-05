@@ -49,7 +49,7 @@ export default {
   },
   watch: {
     show () {
-      if (show && this.course > 0) {
+      if (this.show && this.course > 0) {
         this.loadData()
       }
     }

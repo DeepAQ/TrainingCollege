@@ -4,7 +4,7 @@
     <Alert type="warning" show-icon>
       注意！
       <template slot="desc">
-        注销账户后，您的订单、课程等数据不会删除，但您将无法再次登录。该操作不可逆转。
+        注销账户后，您的订单、课程等数据不会删除，但您将无法再购买新课程。该操作不可逆转。
       </template>
     </Alert>
     <div>

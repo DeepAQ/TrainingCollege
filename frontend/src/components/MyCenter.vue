@@ -51,13 +51,13 @@
         </MenuGroup>
       </Menu>
 
-      <Menu width="auto" :active-name="active" v-if="loginType == 'Manager'" @on-select="collegeMenuSelect">
+      <Menu width="auto" :active-name="active" v-if="loginType == 'Manager'" @on-select="managerMenuSelect">
         <MenuGroup title="系统管理">
           <MenuItem name="permit">
-            机构审批
+            <Icon type="android-checkbox-outline"></Icon> 机构审批
           </MenuItem>
           <MenuItem name="classes">
-            财务结算
+            <Icon type="card"></Icon> 财务结算
           </MenuItem>
           <MenuItem name="stats">
             <Icon type="pie-graph"></Icon> 数据统计
@@ -93,6 +93,9 @@ export default {
     },
     collegeMenuSelect (name) {
       this.$router.push(`/my/college/${name}`)
+    },
+    managerMenuSelect (name) {
+      this.$router.push(`/my/manager/${name}`)
     }
   }
 }

@@ -85,7 +85,14 @@ export default {
       return window.$state.loginName
     },
     loginType () {
-      return window.$state.loginType
+      switch (window.$state.loginType) {
+        case 'Student':
+          return '学员'
+        case 'College':
+          return '机构'
+        case 'Manager':
+          return '经理'
+      }
     },
     loginPrompt () {
       switch (this.userType) {
@@ -155,6 +162,12 @@ export default {
         case 'College':
           this.processLogin('auth/college/login', {
             id: this.user,
+            password: this.pass
+          })
+          break
+        case 'Manager':
+          this.processLogin('auth/manager/login', {
+            username: this.user,
             password: this.pass
           })
           break
