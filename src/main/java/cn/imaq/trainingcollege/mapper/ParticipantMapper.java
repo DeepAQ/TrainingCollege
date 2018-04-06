@@ -1,10 +1,7 @@
 package cn.imaq.trainingcollege.mapper;
 
 import cn.imaq.trainingcollege.domain.entity.Participant;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface ParticipantMapper {
@@ -14,4 +11,7 @@ public interface ParticipantMapper {
 
     @Select("SELECT count(1) FROM `participants` WHERE `class_id` = #{classId} AND `status` = 1")
     Integer countByClassId(Integer classId);
+
+    @Update("UPDATE `participants` SET `status` = 1 WHERE `order_id` = #{orderId}")
+    Integer makeValid(Integer orderId);
 }

@@ -4,15 +4,11 @@ import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.dto.ClassInfoDto;
 import cn.imaq.trainingcollege.domain.dto.NewOrderDto;
-import cn.imaq.trainingcollege.domain.entity.Course;
-import cn.imaq.trainingcollege.domain.entity.CourseClass;
-import cn.imaq.trainingcollege.domain.entity.Order;
-import cn.imaq.trainingcollege.domain.entity.Participant;
-import cn.imaq.trainingcollege.mapper.ClassMapper;
-import cn.imaq.trainingcollege.mapper.CourseMapper;
-import cn.imaq.trainingcollege.mapper.OrderMapper;
-import cn.imaq.trainingcollege.mapper.ParticipantMapper;
+import cn.imaq.trainingcollege.domain.dto.OrderListDto;
+import cn.imaq.trainingcollege.domain.entity.*;
+import cn.imaq.trainingcollege.mapper.*;
 import cn.imaq.trainingcollege.support.exception.ServiceException;
+import cn.imaq.trainingcollege.util.HashUtil;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 
@@ -32,6 +28,12 @@ public class OrderService {
 
     @Autumnwired
     private CourseMapper courseMapper;
+
+    @Autumnwired
+    private StudentMapper studentMapper;
+
+    @Autumnwired
+    private PayService payService;
 
     @Autumnwired
     private Jedis jedis;
@@ -69,8 +71,8 @@ public class OrderService {
                 .courseId(courseClass.getCourseId())
                 .classId(courseClass.getId())
                 .count(count)
-                .orig_price(count * courseClass.getPrice())
-                .status(Order.Status.INVALID)
+                .origPrice(count * courseClass.getPrice())
+                .status(Order.Status.CLOSED)
                 .created((int) (System.currentTimeMillis() / 1000))
                 .build();
         orderMapper.insert(order);
@@ -101,6 +103,50 @@ public class OrderService {
         }).collect(Collectors.toList());
         for (Participant participant : participants) {
             participantMapper.insert(participant);
+        }
+    }
+
+    public List<OrderListDto> getStudentOrderList(Integer studentId) {
+        List<Order> orders = orderMapper.getByStudentId(studentId);
+        return orders.stream().map(order -> {
+            checkExpire(order);
+            Course course = courseMapper.getById(order.getCourseId());
+            return OrderListDto.builder()
+                    .id(order.getId())
+                    .courseName(course.getTitle())
+                    .count(order.getCount())
+                    .origPrice(order.getOrigPrice())
+                    .status(order.getStatus())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    public void payOrder(Integer studentId, Integer orderId, String password) {
+        Order order = orderMapper.getById(orderId);
+        if (order == null || !order.getStudentId().equals(studentId)) {
+            throw new ServiceException("订单不存在");
+        }
+        checkExpire(order);
+        if (order.getStatus() != Order.Status.NOT_PAID) {
+            throw new ServiceException("订单状态不正确");
+        }
+        Student student = studentMapper.getById(order.getStudentId());
+        if (!student.getPwdHash().equals(HashUtil.hash(password))) {
+            throw new ServiceException("账户密码错误，支付失败");
+        }
+        payService.pay(order.getStudentId(), order.getOrigPrice());
+        // paid
+        orderMapper.updateStatus(order.getId(), Order.Status.PAID);
+        participantMapper.makeValid(order.getId());
+        jedis.del("class_" + order.getClassId() + "_order_" + order.getId());
+    }
+
+    private void checkExpire(Order order) {
+        if (order.getStatus() == Order.Status.NOT_PAID) {
+            if (!jedis.exists("class_" + order.getClassId() + "_order_" + order.getId())) {
+                order.setStatus(Order.Status.CLOSED);
+                orderMapper.updateStatus(order.getId(), Order.Status.CLOSED);
+            }
         }
     }
 }

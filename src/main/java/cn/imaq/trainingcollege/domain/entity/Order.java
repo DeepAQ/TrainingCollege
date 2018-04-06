@@ -1,10 +1,14 @@
 package cn.imaq.trainingcollege.domain.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
     private Integer id;
 
@@ -18,15 +22,15 @@ public class Order {
 
     private Integer count;
 
-    private Integer orig_price;
+    private Integer origPrice;
 
-    private Integer pay_price;
+    private Integer payPrice;
 
     private Status status;
 
     private Integer created;
 
     public enum Status {
-        NOT_PAID, PAID, CANCELLED, INVALID
+        NOT_PAID, PAID, CANCELLED, CLOSED
     }
 }

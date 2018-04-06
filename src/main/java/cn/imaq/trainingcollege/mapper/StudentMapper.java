@@ -1,10 +1,7 @@
 package cn.imaq.trainingcollege.mapper;
 
 import cn.imaq.trainingcollege.domain.entity.Student;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface StudentMapper {
@@ -18,6 +15,15 @@ public interface StudentMapper {
     @Select("SELECT * FROM `students` WHERE `id` = #{studentId}")
     Student getById(Integer studentId);
 
-    @Select("UPDATE `students` SET `status` = #{arg1} WHERE `id` = #{arg0}")
-    Student updateStatus(Integer studentId, Student.Status status);
+    @Update("UPDATE `students` SET `status` = #{arg1} WHERE `id` = #{arg0}")
+    Integer updateStatus(Integer studentId, Student.Status status);
+
+    @Update("UPDATE `students` SET `balance` = #{arg2} WHERE `id` = #{arg0} AND `balance` = #{arg1}")
+    Integer casBalance(Integer studentId, Integer oldValue, Integer newValue);
+
+    @Update("UPDATE `students` SET `consumption` = #{arg2} WHERE `id` = #{arg0} AND `consumption` = #{arg1}")
+    Integer casConsumption(Integer studentId, Integer oldValue, Integer newValue);
+
+    @Update("UPDATE `students` SET `points` = #{arg2} WHERE `id` = #{arg0} AND `points` = #{arg1}")
+    Integer casPoints(Integer studentId, Integer oldValue, Integer newValue);
 }

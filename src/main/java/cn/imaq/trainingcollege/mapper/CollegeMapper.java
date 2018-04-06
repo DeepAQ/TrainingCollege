@@ -18,8 +18,8 @@ public interface CollegeMapper {
     List<College> getPendings();
 
     @Update("UPDATE `colleges` SET `profile_id` = #{arg1}, `pending_profile_id` = NULL WHERE `id` = #{arg0}")
-    void updateProfile(Integer id, Integer profileId);
+    Integer updateProfile(Integer id, Integer profileId);
 
     @Update("UPDATE `colleges` SET `pending_profile_id` = #{arg1} WHERE `id` = #{arg0}")
-    void updatePendingProfile(Integer id, Integer pendingProfileId);
+    Integer updatePendingProfile(Integer id, Integer pendingProfileId);
 }

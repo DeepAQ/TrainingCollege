@@ -20,6 +20,12 @@ public class Student {
 
     private Status status;
 
+    private Integer balance;
+
+    private Integer consumption;
+
+    private Integer points;
+
     public enum Status {
         NOT_VERIFIED,
         VERIFIED,

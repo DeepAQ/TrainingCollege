@@ -64,6 +64,7 @@ export default {
         this.show = false
       }).catch(reason => {
         this.$Message.error(reason)
+        this.loadData()
       })
     }
   }

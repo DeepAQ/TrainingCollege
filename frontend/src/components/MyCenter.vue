@@ -9,8 +9,8 @@
           <MenuItem name="level">
             <Icon type="connection-bars"></Icon> 会员级别
           </MenuItem>
-          <MenuItem name="points">
-            <Icon type="star"></Icon> 我的积分
+          <MenuItem name="wallet">
+            <Icon type="star"></Icon> 余额与积分
           </MenuItem>
           <MenuItem name="terminate">
             <Icon type="close"></Icon> 账户注销

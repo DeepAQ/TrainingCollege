@@ -6,6 +6,7 @@ import CourseDetail from '@/components/CourseDetail'
 import MyCenter from '@/components/MyCenter'
 import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
+import StudentOrderList from '@/components/student/OrderList'
 import CollegeProfile from '@/components/college/Profile'
 import CollegeCourses from '@/components/college/Courses'
 import ManagerPermit from '@/components/manager/Permit'
@@ -37,6 +38,10 @@ export default new Router({
         {
           path: 'student/terminate',
           component: StudentTerminate
+        },
+        {
+          path: 'student/orders',
+          component: StudentOrderList
         },
         {
           path: 'college/profile',
