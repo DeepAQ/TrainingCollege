@@ -14,6 +14,9 @@ public interface ClassMapper {
     @Options(useGeneratedKeys = true)
     void insert(CourseClass po);
 
+    @Select("SELECT * FROM `classes` WHERE `id` = #{id}")
+    CourseClass getById(Integer id);
+
     @Select("SELECT * FROM `classes` WHERE `course_id` = #{courseId}")
     List<CourseClass> getByCourseId(Integer courseId);
 }

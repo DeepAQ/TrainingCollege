@@ -1,4 +1,12 @@
 package cn.imaq.trainingcollege.domain.dto;
 
-public class OrderDto {
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class NewOrderDto {
+    private Integer classId;
+
+    private List<String> names;
 }

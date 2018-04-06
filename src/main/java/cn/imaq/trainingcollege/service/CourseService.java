@@ -3,7 +3,9 @@ package cn.imaq.trainingcollege.service;
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.dto.CollegeProfileDto;
+import cn.imaq.trainingcollege.domain.dto.CourseDetailDto;
 import cn.imaq.trainingcollege.domain.dto.CourseListDto;
+import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
 import cn.imaq.trainingcollege.domain.entity.Course;
 import cn.imaq.trainingcollege.domain.entity.CourseClass;
 import cn.imaq.trainingcollege.mapper.ClassMapper;
@@ -49,6 +51,23 @@ public class CourseService {
 
     public Course getCourse(Integer courseId) {
         return courseMapper.getById(courseId);
+    }
+
+    public CourseDetailDto getCourseDetail(Integer courseId) {
+        Course course = courseMapper.getById(courseId);
+        CollegeProfile collegeProfile = collegeService.getProfiles(course.getCollegeId()).getCurrent();
+        List<CourseClass> classes = classMapper.getByCourseId(courseId);
+        return CourseDetailDto.builder()
+                .id(course.getId())
+                .college(collegeProfile)
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .tags(course.getTags())
+                .startTime(course.getStartTime())
+                .period(course.getPeriod())
+                .weeks(course.getWeeks())
+                .classes(classes)
+                .build();
     }
 
     public void addCourse(Integer collegeId, Course course) {

@@ -1,16 +1,22 @@
 package cn.imaq.trainingcollege.domain.dto;
 
+import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
+import cn.imaq.trainingcollege.domain.entity.CourseClass;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
-public class CourseListDto {
+public class CourseDetailDto {
     private Integer id;
 
     private String title;
 
-    private String collegeName;
+    private String description;
+
+    private CollegeProfile college;
 
     private String tags;
 
@@ -19,4 +25,6 @@ public class CourseListDto {
     private Integer period;
 
     private Integer weeks;
+
+    private List<CourseClass> classes;
 }

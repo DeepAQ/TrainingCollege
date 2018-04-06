@@ -6,6 +6,7 @@ import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.annotation.param.RequestParam;
 import cn.imaq.autumn.rest.core.RequestMethod;
+import cn.imaq.trainingcollege.domain.dto.CourseDetailDto;
 import cn.imaq.trainingcollege.domain.dto.CourseListDto;
 import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.Response;
@@ -28,6 +29,11 @@ public class CourseController {
     @RequestMapping("/list")
     public Response<List<CourseListDto>> courseList() {
         return Response.ofSuccess(courseService.getCourseList());
+    }
+
+    @RequestMapping("/detail")
+    public Response<CourseDetailDto> courseDetail(@JSONBody("courseId") Integer courseId) {
+        return Response.ofSuccess(courseService.getCourseDetail(courseId));
     }
 
     @RequestMapping("/my")

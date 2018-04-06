@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import CourseList from '@/components/CourseList'
+import CourseDetail from '@/components/CourseDetail'
 import MyCenter from '@/components/MyCenter'
 import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
@@ -20,6 +21,10 @@ export default new Router({
     {
       path: '/courses',
       component: CourseList
+    },
+    {
+      path: '/detail/:id',
+      component: CourseDetail
     },
     {
       path: '/my',
