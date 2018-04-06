@@ -6,6 +6,7 @@ import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.annotation.param.RequestParam;
 import cn.imaq.autumn.rest.core.RequestMethod;
+import cn.imaq.trainingcollege.domain.dto.CourseListDto;
 import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.Response;
 import cn.imaq.trainingcollege.domain.entity.Course;
@@ -24,8 +25,13 @@ public class CourseController {
     @Autumnwired
     private CourseService courseService;
 
+    @RequestMapping("/list")
+    public Response<List<CourseListDto>> courseList() {
+        return Response.ofSuccess(courseService.getCourseList());
+    }
+
     @RequestMapping("/my")
-    public Response<List<Course>> courses(@JWTClaim LoginClaim claim) {
+    public Response<List<Course>> myCourses(@JWTClaim LoginClaim claim) {
         if (claim == null || claim.getUserType() != UserType.College) {
             return Response.ofFailure("无权限");
         }

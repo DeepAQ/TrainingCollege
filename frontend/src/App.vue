@@ -5,9 +5,9 @@
         <div class="layout-logo">
           <Icon type="university"></Icon> TrainingCollege
         </div>
-        <Menu mode="horizontal" theme="dark" active-name="1">
+        <Menu mode="horizontal" theme="dark" :active-name="active" @on-select="menuSelect">
           <div class="layout-nav">
-            <menu-item name="course">
+            <menu-item name="courses">
               <Icon type="university"></Icon> 课程列表
             </menu-item>
             <menu-item name="my">
@@ -18,11 +18,6 @@
         <UserInfo/>
       </Header>
       <Content style="padding: 0 50px;">
-        <Breadcrumb style="margin: 20px 0;">
-          <BreadcrumbItem>Home</BreadcrumbItem>
-          <BreadcrumbItem>Components</BreadcrumbItem>
-          <BreadcrumbItem>Layout</BreadcrumbItem>
-        </Breadcrumb>
         <Card>
           <router-view></router-view>
         </Card>
@@ -40,7 +35,17 @@ import UserInfo from './components/UserInfo'
 
 export default {
   components: { UserInfo },
-  name: "App"
+  name: "App",
+  computed: {
+    active () {
+      return this.$route.path.substring(1, this.$route.path.indexOf('/', 1))
+    }
+  },
+  methods: {
+    menuSelect (name) {
+      this.$router.push(`/${name}`)
+    }
+  }
 };
 </script>
 
@@ -59,6 +64,10 @@ export default {
     .ivu-menu {
       margin-right: 20px;
     }
+  }
+
+  .ivu-layout-content {
+    margin-top: 20px;
   }
 
   .ivu-layout-footer {
