@@ -48,4 +48,13 @@ public class OrderController {
         orderService.payOrder(claim.getUserId(), dto.getOrderId(), dto.getPassword());
         return Response.ofSuccess();
     }
+
+    @RequestMapping("/cancel")
+    public Response cancelOrder(@JWTClaim LoginClaim claim, @JSONBody("orderId") Integer orderId) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("无权限");
+        }
+        orderService.cancelOrder(claim.getUserId(), orderId);
+        return Response.ofSuccess();
+    }
 }

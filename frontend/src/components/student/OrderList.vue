@@ -60,6 +60,13 @@ export default {
                     style: { marginLeft: '5px' },
                     on: {
                       click: () => {
+                        this.$Modal.confirm({
+                          title: '提示',
+                          content: '确定要取消订单吗？',
+                          onOk: () => {
+                            this.cancelOrder(p.row.id)
+                          }
+                        })
                       }
                     }
                   }, '取消'),
@@ -70,6 +77,13 @@ export default {
                     props: { type: 'error', size: 'small' },
                     on: {
                       click: () => {
+                        this.$Modal.confirm({
+                          title: '提示',
+                          content: '确定要退课吗？<br>开课两周前退课退款 80%；<br>开课前两周内退课退款 50%；<br>开课后退课不退款。',
+                          onOk: () => {
+                            this.cancelOrder(p.row.id)
+                          }
+                        })
                       }
                     }
                   }, '退课')
@@ -82,8 +96,6 @@ export default {
       ],
       orders: []
     }
-  },
-  computed: {
   },
   mounted () {
     this.loadData()
@@ -99,7 +111,13 @@ export default {
       })
     },
     cancelOrder (id) {
-      
+      api('order/cancel', { orderId: id }).then(result => {
+        this.$Message.info('取消订单成功')
+        this.loadData()
+      }).catch(reason => {
+        this.$Message.error(reason)
+        this.loadData()
+      })
     }
   }
 }

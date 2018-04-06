@@ -137,8 +137,37 @@ public class OrderService {
         payService.pay(order.getStudentId(), order.getOrigPrice());
         // paid
         orderMapper.updateStatus(order.getId(), Order.Status.PAID);
-        participantMapper.makeValid(order.getId());
+        orderMapper.updatePayPrice(order.getId(), order.getOrigPrice());
+        participantMapper.makeValid(order.getId(), 1);
         jedis.del("class_" + order.getClassId() + "_order_" + order.getId());
+    }
+
+    public void cancelOrder(Integer studentId, Integer orderId) {
+        Order order = orderMapper.getById(orderId);
+        if (order == null || !order.getStudentId().equals(studentId)) {
+            throw new ServiceException("订单不存在");
+        }
+        checkExpire(order);
+        if (order.getStatus() != Order.Status.PAID && order.getStatus() != Order.Status.NOT_PAID) {
+            throw new ServiceException("订单状态不正确");
+        }
+        if (order.getStatus() == Order.Status.PAID) {
+            // refund
+            Course course = courseMapper.getById(order.getCourseId());
+            long delta = course.getStartTime() - System.currentTimeMillis() / 1000;
+            if (delta > 0) {
+                int refund;
+                if (delta <= 14 * 24 * 3600) {
+                    refund = (int) (order.getPayPrice() * 0.5);
+                } else {
+                    refund = (int) (order.getPayPrice() * 0.8);
+                }
+                payService.refund(order.getStudentId(), refund);
+            }
+        }
+        // paid
+        orderMapper.updateStatus(order.getId(), Order.Status.CANCELLED);
+        participantMapper.makeValid(order.getId(), 0);
     }
 
     private void checkExpire(Order order) {

@@ -12,6 +12,6 @@ public interface ParticipantMapper {
     @Select("SELECT count(1) FROM `participants` WHERE `class_id` = #{classId} AND `status` = 1")
     Integer countByClassId(Integer classId);
 
-    @Update("UPDATE `participants` SET `status` = 1 WHERE `order_id` = #{orderId}")
-    Integer makeValid(Integer orderId);
+    @Update("UPDATE `participants` SET `status` = #{arg1} WHERE `order_id` = #{arg0}")
+    Integer makeValid(Integer orderId, Integer status);
 }

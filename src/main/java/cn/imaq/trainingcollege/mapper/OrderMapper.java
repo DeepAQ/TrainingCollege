@@ -19,4 +19,7 @@ public interface OrderMapper {
 
     @Update("UPDATE `orders` SET `status` = #{arg1} WHERE `id` = #{arg0}")
     Integer updateStatus(Integer id, Order.Status status);
+
+    @Update("UPDATE `orders` SET `pay_price` = #{arg1} WHERE `id` = #{arg0}")
+    Integer updatePayPrice(Integer id, Integer payPrice);
 }

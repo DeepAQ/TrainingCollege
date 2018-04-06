@@ -29,10 +29,16 @@ public class PayService {
         }
     }
 
-    public void recharge(Integer studentId, Integer amount) {
+    public void refund(Integer studentId, Integer amount) {
         while (true) {
             Student student = studentMapper.getById(studentId);
             if (studentMapper.casBalance(studentId, student.getBalance(), student.getBalance() + amount) > 0) {
+                break;
+            }
+        }
+        while (true) {
+            Student student = studentMapper.getById(studentId);
+            if (studentMapper.casConsumption(studentId, student.getConsumption(), student.getConsumption() - amount) > 0) {
                 break;
             }
         }
