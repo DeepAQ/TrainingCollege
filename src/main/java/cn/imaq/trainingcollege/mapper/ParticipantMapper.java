@@ -14,4 +14,7 @@ public interface ParticipantMapper {
 
     @Update("UPDATE `participants` SET `status` = #{arg1} WHERE `order_id` = #{arg0}")
     Integer makeValid(Integer orderId, Integer status);
+
+    @Update("UPDATE `participants` SET `class_id` = #{arg1} WHERE `order_id` = #{arg0}")
+    Integer updateClassId(Integer orderId, Integer classId);
 }

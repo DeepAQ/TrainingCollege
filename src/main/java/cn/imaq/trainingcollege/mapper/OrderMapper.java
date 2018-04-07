@@ -17,9 +17,15 @@ public interface OrderMapper {
     @Select("SELECT * FROM `orders` WHERE `student_id` = #{studentId} ORDER BY `created` DESC")
     List<Order> getByStudentId(Integer studentId);
 
+    @Select("SELECT * FROM `orders` WHERE `college_id` = #{arg0} AND `class_id` = 0 AND `status` = #{arg1} ORDER BY `created` DESC")
+    List<Order> getPendingsByCollegeId(Integer collegeId, Order.Status status);
+
     @Update("UPDATE `orders` SET `status` = #{arg1} WHERE `id` = #{arg0}")
     Integer updateStatus(Integer id, Order.Status status);
 
     @Update("UPDATE `orders` SET `pay_price` = #{arg1} WHERE `id` = #{arg0}")
     Integer updatePayPrice(Integer id, Integer payPrice);
+
+    @Update("UPDATE `orders` SET `class_id` = #{arg1} WHERE `id` = #{arg0}")
+    Integer updateClassId(Integer id, Integer classId);
 }

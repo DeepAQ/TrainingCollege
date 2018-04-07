@@ -26,5 +26,7 @@ public class CourseDetailDto {
 
     private Integer weeks;
 
+    private Integer avgPrice;
+
     private List<CourseClass> classes;
 }

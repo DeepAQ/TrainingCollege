@@ -18,7 +18,9 @@
     <h3>报名课程</h3>
     <div>
       <RadioGroup v-model="chosenClass" vertical>
-        <Radio size="large" :label="0">不选班级，开课前两周配班</Radio>
+        <Radio size="large" :label="0" v-if="detail.avgPrice > 0">
+          ¥ {{detail.avgPrice / 100}}（不选班级，开课前两周内配班）
+        </Radio>
         <Radio size="large" :label="c.id" v-for="c in detail.classes">
           ¥ {{c.price / 100}}（教师：{{c.teacher}}，班级人数：{{c.limit}}）
         </Radio>
@@ -26,15 +28,17 @@
     </div>
     <Button size="large" type="primary" style="margin-top: 10px;" @click="toOrder">报名</Button>
     <OrderDetail ref="od"/>
+    <OrderDetailNoClass ref="odnc"/>
   </div>
 </template>
 
 <script>
 import api from '@/api'
 import OrderDetail from './order/OrderDetail'
+import OrderDetailNoClass from './order/OrderDetailNoClass'
 
 export default {
-  components: { OrderDetail },
+  components: { OrderDetail, OrderDetailNoClass },
   data () {
     return {
       detail: {},
@@ -72,6 +76,10 @@ export default {
       if (this.chosenClass > 0) {
         this.$refs.od.classId = this.chosenClass
         this.$refs.od.show = true
+      } else {
+        this.$refs.odnc.courseId = this.detail.id
+        this.$refs.odnc.avgPrice = this.detail.avgPrice
+        this.$refs.odnc.show = true
       }
     }
   }

@@ -31,9 +31,10 @@ export default {
       course: 0,
       cols: [
         { title: '教师', key: 'teacher' },
-        { title: '人数', key: 'limit' },
+        { title: '班级人数', key: 'limit', width: 100 },
+        { title: '报名人数', key: 'paid', width: 100 },
         {
-          title: '价格',
+          title: '价格', width: 100,
           render: (h, params) => {
             return h('div', `${params.row.price / 100}`)
           }

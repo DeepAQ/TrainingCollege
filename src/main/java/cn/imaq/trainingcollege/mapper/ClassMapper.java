@@ -17,6 +17,6 @@ public interface ClassMapper {
     @Select("SELECT * FROM `classes` WHERE `id` = #{id}")
     CourseClass getById(Integer id);
 
-    @Select("SELECT * FROM `classes` WHERE `course_id` = #{courseId}")
+    @Select("SELECT * FROM `classes` WHERE `course_id` = #{courseId} ORDER BY `price` ASC")
     List<CourseClass> getByCourseId(Integer courseId);
 }

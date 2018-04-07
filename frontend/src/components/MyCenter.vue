@@ -39,6 +39,9 @@
           <MenuItem name="courses">
             <Icon type="university"></Icon> 课程计划
           </MenuItem>
+          <MenuItem name="orders">
+            <Icon type="android-list"></Icon> 订单配班
+          </MenuItem>
           <MenuItem name="sale">
             <Icon type="card"></Icon> 现场缴费
           </MenuItem>
@@ -76,7 +79,6 @@ export default {
   name: "MyCenter",
   data () {
     return {
-
     }
   },
   computed: {

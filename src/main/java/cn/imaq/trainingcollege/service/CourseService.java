@@ -2,14 +2,13 @@ package cn.imaq.trainingcollege.service;
 
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
-import cn.imaq.trainingcollege.domain.dto.CollegeProfileDto;
-import cn.imaq.trainingcollege.domain.dto.CourseDetailDto;
-import cn.imaq.trainingcollege.domain.dto.CourseListDto;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
 import cn.imaq.trainingcollege.domain.entity.Course;
 import cn.imaq.trainingcollege.domain.entity.CourseClass;
 import cn.imaq.trainingcollege.mapper.ClassMapper;
 import cn.imaq.trainingcollege.mapper.CourseMapper;
+import cn.imaq.trainingcollege.mapper.ParticipantMapper;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +23,13 @@ public class CourseService {
     private ClassMapper classMapper;
 
     @Autumnwired
+    private ParticipantMapper participantMapper;
+
+    @Autumnwired
     private CollegeService collegeService;
+
+    @Autumnwired
+    private OrderService orderService;
 
     public List<CourseListDto> getCourseList() {
         return courseMapper.getAll().stream().map(x -> {
@@ -57,6 +62,13 @@ public class CourseService {
         Course course = courseMapper.getById(courseId);
         CollegeProfile collegeProfile = collegeService.getProfiles(course.getCollegeId()).getCurrent();
         List<CourseClass> classes = classMapper.getByCourseId(courseId);
+        int totalLimit = classes.stream().mapToInt(CourseClass::getLimit).sum();
+        int avgPrice;
+        if (totalLimit > 0) {
+            avgPrice = classes.stream().mapToInt(x -> x.getPrice() * x.getLimit()).sum() / totalLimit;
+        } else {
+            avgPrice = 0;
+        }
         return CourseDetailDto.builder()
                 .id(course.getId())
                 .college(collegeProfile)
@@ -66,6 +78,7 @@ public class CourseService {
                 .startTime(course.getStartTime())
                 .period(course.getPeriod())
                 .weeks(course.getWeeks())
+                .avgPrice(avgPrice)
                 .classes(classes)
                 .build();
     }
@@ -75,8 +88,18 @@ public class CourseService {
         courseMapper.insert(course);
     }
 
-    public List<CourseClass> getClassesOfCourse(Integer courseId) {
-        return classMapper.getByCourseId(courseId);
+    public List<ClassManageDto> getClassesOfCourse(Integer courseId) {
+        return classMapper.getByCourseId(courseId).stream().map(c -> {
+            int paid = participantMapper.countByClassId(c.getId());
+            return ClassManageDto.builder()
+                    .id(c.getId())
+                    .courseId(c.getCourseId())
+                    .teacher(c.getTeacher())
+                    .price(c.getPrice())
+                    .limit(c.getLimit())
+                    .paid(paid)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     public void addClass(Integer courseId, CourseClass courseClass) {

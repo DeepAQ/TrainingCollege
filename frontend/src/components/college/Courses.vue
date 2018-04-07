@@ -5,7 +5,7 @@
         <h2>课程计划</h2>
       </div>
       <div>
-        <Button size="large" type="primary" @click="addClick">添加课程计划</Button>
+        <Button size="large" type="success" @click="addClick">添加课程计划</Button>
       </div>
     </div>
     <Table stripe :columns="cols" :data="courses"></Table>
@@ -44,15 +44,15 @@ export default {
       startDate: null,
       cols: [
         { title: '课程名称', key: 'title' },
-        { title: '课程类别', key: 'tags' },
+        { title: '课程类别', key: 'tags', width: 120 },
         {
-          title: '开始时间',
+          title: '开课时间', width: 100,
           render: (h, params) => {
-            return h('div', new Date(params.row.startTime * 1000) + '')
+            return h('div', this.formatDate(params.row.startTime))
           }
         },
         {
-          title: '课时',
+          title: '课时', width: 150,
           render: (h, params) => {
             return h('div', `${params.row.weeks} 周，每周 ${params.row.period} 课时`)
           }
@@ -93,6 +93,10 @@ export default {
     },
     dateChange () {
       this.newCourse.startTime = this.startDate.getTime() / 1000
+    },
+    formatDate (time) {
+      let date = new Date(time * 1000)
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     },
     addClick () {
       this.newCourse = {

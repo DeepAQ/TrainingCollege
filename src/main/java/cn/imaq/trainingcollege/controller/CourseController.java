@@ -6,10 +6,7 @@ import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.annotation.param.RequestParam;
 import cn.imaq.autumn.rest.core.RequestMethod;
-import cn.imaq.trainingcollege.domain.dto.CourseDetailDto;
-import cn.imaq.trainingcollege.domain.dto.CourseListDto;
-import cn.imaq.trainingcollege.domain.dto.LoginClaim;
-import cn.imaq.trainingcollege.domain.dto.Response;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.Course;
 import cn.imaq.trainingcollege.domain.entity.CourseClass;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
@@ -60,7 +57,7 @@ public class CourseController {
     }
 
     @RequestMapping("/classes")
-    public Response<List<CourseClass>> classes(@JWTClaim LoginClaim claim, @JSONBody("courseId") Integer courseId) {
+    public Response<List<ClassManageDto>> classes(@JWTClaim LoginClaim claim, @JSONBody("courseId") Integer courseId) {
         if (claim == null || claim.getUserType() != UserType.College) {
             return Response.ofFailure("无权限");
         }

@@ -32,12 +32,38 @@ public class OrderController {
         return Response.ofSuccess();
     }
 
+    @RequestMapping("/newnc")
+    public Response newOrderNoClass(@JWTClaim LoginClaim claim, @JSONBody NewOrderNoClassDto dto) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("无权限");
+        }
+        orderService.newOrderNoClass(claim.getUserId(), dto);
+        return Response.ofSuccess();
+    }
+
     @RequestMapping("/my")
     public Response<List<OrderListDto>> myOrders(@JWTClaim LoginClaim claim) {
         if (claim == null || claim.getUserType() != UserType.Student) {
             return Response.ofFailure("无权限");
         }
         return Response.ofSuccess(orderService.getStudentOrderList(claim.getUserId()));
+    }
+
+    @RequestMapping("/pending")
+    public Response<List<OrderListDto>> pendingOrders(@JWTClaim LoginClaim claim) {
+        if (claim == null || claim.getUserType() != UserType.College) {
+            return Response.ofFailure("无权限");
+        }
+        return Response.ofSuccess(orderService.getCollegePendingOrderList(claim.getUserId()));
+    }
+
+    @RequestMapping("/allot")
+    public Response allotOrder(@JWTClaim LoginClaim claim, @JSONBody("orderId") Integer orderId) {
+        if (claim == null || claim.getUserType() != UserType.College) {
+            return Response.ofFailure("无权限");
+        }
+        orderService.allotOrder(claim.getUserId(), orderId);
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/pay")

@@ -4,6 +4,7 @@ import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.dto.ClassInfoDto;
 import cn.imaq.trainingcollege.domain.dto.NewOrderDto;
+import cn.imaq.trainingcollege.domain.dto.NewOrderNoClassDto;
 import cn.imaq.trainingcollege.domain.dto.OrderListDto;
 import cn.imaq.trainingcollege.domain.entity.*;
 import cn.imaq.trainingcollege.mapper.*;
@@ -55,14 +56,21 @@ public class OrderService {
         if (dto.getNames() == null || dto.getNames().isEmpty()) {
             throw new ServiceException("学员数量不能为 0");
         }
+        int count = dto.getNames().size();
+        if (count > 3) {
+            throw new ServiceException("每单最多报名 3 人");
+        }
         if (StringUtils.isAnyBlank(dto.getNames().toArray(new String[0]))) {
             throw new ServiceException("请填写所有学员姓名");
+        }
+        Student student = studentMapper.getById(studentId);
+        if (student.getStatus() == Student.Status.TERMINATED) {
+            throw new ServiceException("该会员已注销，不能再报名新课程");
         }
         CourseClass courseClass = classMapper.getById(dto.getClassId());
         if (courseClass == null) {
             throw new ServiceException("班级不存在");
         }
-        int count = dto.getNames().size();
         // insert order
         Course course = courseMapper.getById(courseClass.getCourseId());
         Order order = Order.builder()
@@ -106,6 +114,57 @@ public class OrderService {
         }
     }
 
+    public void newOrderNoClass(Integer studentId, NewOrderNoClassDto dto) {
+        if (dto.getNames() == null || dto.getNames().isEmpty()) {
+            throw new ServiceException("学员数量不能为 0");
+        }
+        int count = dto.getNames().size();
+        if (count > 9) {
+            throw new ServiceException("每单最多报名 9 人");
+        }
+        if (StringUtils.isAnyBlank(dto.getNames().toArray(new String[0]))) {
+            throw new ServiceException("请填写所有学员姓名");
+        }
+        Student student = studentMapper.getById(studentId);
+        if (student.getStatus() == Student.Status.TERMINATED) {
+            throw new ServiceException("该会员已注销，不能再报名新课程");
+        }
+        // insert order
+        Course course = courseMapper.getById(dto.getCourseId());
+        List<CourseClass> classes = classMapper.getByCourseId(dto.getCourseId());
+        int totalLimit = classes.stream().mapToInt(CourseClass::getLimit).sum();
+        if (totalLimit <= 0) {
+            throw new ServiceException("该课程暂无班级，无法报名");
+        }
+        int avgPrice = classes.stream().mapToInt(x -> x.getPrice() * x.getLimit()).sum() / totalLimit;
+        Order order = Order.builder()
+                .studentId(studentId)
+                .collegeId(course.getCollegeId())
+                .courseId(dto.getCourseId())
+                .classId(0)
+                .count(count)
+                .origPrice(count * avgPrice)
+                .status(Order.Status.NOT_PAID)
+                .created((int) (System.currentTimeMillis() / 1000))
+                .build();
+        orderMapper.insert(order);
+        jedis.setex("class_0_order_" + order.getId(), 15 * 60, String.valueOf(count));
+        // insert participants
+        List<Participant> participants = dto.getNames().stream().map(x -> {
+            return Participant.builder()
+                    .studentId(studentId)
+                    .courseId(dto.getCourseId())
+                    .classId(0)
+                    .orderId(order.getId())
+                    .name(x)
+                    .status(Participant.Status.INVALID)
+                    .build();
+        }).collect(Collectors.toList());
+        for (Participant participant : participants) {
+            participantMapper.insert(participant);
+        }
+    }
+
     public List<OrderListDto> getStudentOrderList(Integer studentId) {
         List<Order> orders = orderMapper.getByStudentId(studentId);
         return orders.stream().map(order -> {
@@ -119,6 +178,39 @@ public class OrderService {
                     .status(order.getStatus())
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    public List<OrderListDto> getCollegePendingOrderList(Integer collegeId) {
+        List<Order> orders = orderMapper.getPendingsByCollegeId(collegeId, Order.Status.PAID);
+        return orders.stream().map(order -> {
+            Course course = courseMapper.getById(order.getCourseId());
+            return OrderListDto.builder()
+                    .id(order.getId())
+                    .courseName(course.getTitle())
+                    .count(order.getCount())
+                    .origPrice(order.getOrigPrice())
+                    .status(order.getStatus())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    public void allotOrder(Integer collegeId, Integer orderId) {
+        Order order = orderMapper.getById(orderId);
+        if (order == null || !order.getCollegeId().equals(collegeId)) {
+            throw new ServiceException("订单不存在");
+        }
+        if (order.getStatus() != Order.Status.PAID || order.getClassId() != 0) {
+            throw new ServiceException("订单状态不正确");
+        }
+        List<CourseClass> classes = classMapper.getByCourseId(order.getCourseId());
+        for (CourseClass c : classes) {
+            if (getClassInfo(c.getId()).getAvailable() >= order.getCount()) {
+                orderMapper.updateClassId(order.getId(), c.getId());
+                participantMapper.updateClassId(order.getId(), c.getId());
+                return;
+            }
+        }
+        throw new ServiceException("配班失败，所有班级均不足名额");
     }
 
     public void payOrder(Integer studentId, Integer orderId, String password) {
