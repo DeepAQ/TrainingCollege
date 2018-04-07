@@ -31,4 +31,10 @@ public interface OrderMapper {
 
     @Select("SELECT sum(pay_price) FROM `orders` WHERE `college_id` = #{arg0} AND `status` = #{arg1}")
     Integer sumByCollegeId(Integer collegeId, Order.Status status);
+
+    @Select("SELECT sum(count) FROM `orders` WHERE `course_id` = #{arg0} AND `status` = #{arg1}")
+    Integer sumCountByCourseId(Integer course, Order.Status status);
+
+    @Select("SELECT sum(pay_price) FROM `orders` WHERE `course_id` = #{arg0} AND `status` = #{arg1}")
+    Integer sumPriceByCourseId(Integer course, Order.Status status);
 }

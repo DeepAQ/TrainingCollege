@@ -3,7 +3,6 @@ package cn.imaq.trainingcollege.service;
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.dto.CollegeSettlementDto;
-import cn.imaq.trainingcollege.domain.dto.CollegeStatsDto;
 import cn.imaq.trainingcollege.domain.entity.Order;
 import cn.imaq.trainingcollege.domain.entity.Settlement;
 import cn.imaq.trainingcollege.mapper.CollegeMapper;
@@ -49,12 +48,5 @@ public class SettlementService {
                         .time((int) (System.currentTimeMillis() / 1000))
                         .build()
         );
-    }
-
-    public CollegeStatsDto getStats(Integer collegeId) {
-        return CollegeStatsDto.builder()
-                .settledIncome(settlementMapper.sumRealByCollegeId(collegeId))
-                .settlements(settlementMapper.getByCollegeId(collegeId))
-                .build();
     }
 }

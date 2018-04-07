@@ -6,6 +6,8 @@
     </div>
     <h2>结算统计</h2>
     <Table stripe :columns="cols" :data="stats.settlements" style="margin-top: 10px;"></Table>
+    <h2>课程统计</h2>
+    <Table stripe :columns="cols2" :data="stats.courseStats" style="margin-top: 10px;"></Table>
   </div>
 </template>
 
@@ -20,6 +22,14 @@ export default {
         { title: '原始收入', width: 200, render: (h, p) => h('div', `¥ ${p.row.origAmount / 100}`) },
         { title: '结算收入', width: 200, render: (h, p) => h('div', `¥ ${p.row.realAmount / 100}`) }
       ],
+      cols2: [
+        { title: '课程', render: (h, p) => h('router-link', {
+              props: { to: `/detail/${p.row.id}` }
+        }, p.row.name)},
+        { title: '报名人数', width: 140, key: 'totalCount' },
+        { title: '退订人数', width: 140, key: 'cancelCount' },
+        { title: '总收入', width: 140, render: (h, p) => h('div', `¥ ${p.row.totalAmount / 100}`) },
+      ],
       stats: {}
     }
   },
@@ -28,7 +38,7 @@ export default {
   },
   methods: {
     loadData () {
-      api('settlement/stats', {}).then(result => {
+      api('college/stats', {}).then(result => {
         if (result) {
           this.stats = result
         }
@@ -41,5 +51,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+h2 {
+  margin-top: 10px;
+}
 </style>

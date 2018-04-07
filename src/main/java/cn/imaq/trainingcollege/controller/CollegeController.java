@@ -5,10 +5,7 @@ import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
-import cn.imaq.trainingcollege.domain.dto.CollegePendingDto;
-import cn.imaq.trainingcollege.domain.dto.CollegeProfileDto;
-import cn.imaq.trainingcollege.domain.dto.LoginClaim;
-import cn.imaq.trainingcollege.domain.dto.Response;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.service.CollegeService;
@@ -60,5 +57,13 @@ public class CollegeController {
         }
         collegeService.permitPending(collegeId, allow);
         return Response.ofSuccess();
+    }
+
+    @RequestMapping("/stats")
+    public Response<CollegeStatsDto> stats(@JWTClaim LoginClaim claim) {
+        if (claim == null || claim.getUserType() != UserType.College) {
+            return Response.ofFailure("无权限");
+        }
+        return Response.ofSuccess(collegeService.getStats(claim.getUserId()));
     }
 }

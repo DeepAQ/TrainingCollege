@@ -12,4 +12,6 @@ public class CollegeStatsDto {
     private Integer settledIncome;
 
     private List<Settlement> settlements;
+
+    private List<CourseStatsDto> courseStats;
 }

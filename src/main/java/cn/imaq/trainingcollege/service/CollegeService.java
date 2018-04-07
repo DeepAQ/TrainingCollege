@@ -5,15 +5,16 @@ import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.College;
 import cn.imaq.trainingcollege.domain.entity.CollegeProfile;
+import cn.imaq.trainingcollege.domain.entity.Order;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
-import cn.imaq.trainingcollege.mapper.CollegeMapper;
-import cn.imaq.trainingcollege.mapper.CollegeProfileMapper;
+import cn.imaq.trainingcollege.mapper.*;
 import cn.imaq.trainingcollege.support.exception.ServiceException;
 import cn.imaq.trainingcollege.util.HashUtil;
 import cn.imaq.trainingcollege.util.JWTUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CollegeService {
@@ -22,6 +23,15 @@ public class CollegeService {
 
     @Autumnwired
     private CollegeProfileMapper collegeProfileMapper;
+
+    @Autumnwired
+    private SettlementMapper settlementMapper;
+
+    @Autumnwired
+    private CourseMapper courseMapper;
+
+    @Autumnwired
+    private OrderMapper orderMapper;
 
     public LoginResultDto login(CollegeLoginDto dto) {
         Integer id = Integer.valueOf(dto.getId());
@@ -107,5 +117,25 @@ public class CollegeService {
         } else {
             collegeMapper.updatePendingProfile(college.getId(), null);
         }
+    }
+
+    public CollegeStatsDto getStats(Integer collegeId) {
+        List<CourseStatsDto> courseStats = courseMapper.getByCollegeId(collegeId).stream().map(c -> {
+            Integer totalCount = orderMapper.sumCountByCourseId(c.getId(), Order.Status.PAID);
+            Integer totalAmount = orderMapper.sumPriceByCourseId(c.getId(), Order.Status.PAID);
+            Integer cancelCount = orderMapper.sumCountByCourseId(c.getId(), Order.Status.CANCELLED);
+            return CourseStatsDto.builder()
+                    .id(c.getId())
+                    .name(c.getTitle())
+                    .totalCount(totalCount == null ? 0 : totalCount)
+                    .totalAmount(totalAmount == null ? 0 : totalAmount)
+                    .cancelCount(cancelCount == null ? 0 : cancelCount)
+                    .build();
+        }).collect(Collectors.toList());
+        return CollegeStatsDto.builder()
+                .settledIncome(settlementMapper.sumRealByCollegeId(collegeId))
+                .settlements(settlementMapper.getByCollegeId(collegeId))
+                .courseStats(courseStats)
+                .build();
     }
 }

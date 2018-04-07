@@ -5,7 +5,10 @@ import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
-import cn.imaq.trainingcollege.domain.dto.*;
+import cn.imaq.trainingcollege.domain.dto.CollegeSettlementDto;
+import cn.imaq.trainingcollege.domain.dto.LoginClaim;
+import cn.imaq.trainingcollege.domain.dto.Response;
+import cn.imaq.trainingcollege.domain.dto.SettlementAddDto;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.service.SettlementService;
 import cn.imaq.trainingcollege.support.annotation.JWTClaim;
@@ -33,13 +36,5 @@ public class SettlementController {
         }
         settlementService.addSettlement(dto.getCollegeId(), dto.getOrigAmount(), dto.getRatio());
         return Response.ofSuccess();
-    }
-
-    @RequestMapping("/stats")
-    public Response<CollegeStatsDto> stats(@JWTClaim LoginClaim claim) {
-        if (claim == null || claim.getUserType() != UserType.College) {
-            return Response.ofFailure("无权限");
-        }
-        return Response.ofSuccess(settlementService.getStats(claim.getUserId()));
     }
 }
