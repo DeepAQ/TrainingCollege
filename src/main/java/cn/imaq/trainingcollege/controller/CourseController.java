@@ -83,4 +83,20 @@ public class CourseController {
         courseService.addClass(courseId, courseClass);
         return Response.ofSuccess();
     }
+
+    @RequestMapping("/participants")
+    public Response<List<ParticipantDto>> participants(@JWTClaim LoginClaim claim, @JSONBody("classId") Integer classId) {
+        if (claim == null || claim.getUserType() != UserType.College) {
+            return Response.ofFailure("无权限");
+        }
+        return Response.ofSuccess(courseService.getParticipantsOfClass(classId));
+    }
+
+    @RequestMapping("/participated")
+    public Response<List<CourseParticipantDto>> participated(@JWTClaim LoginClaim claim) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("无权限");
+        }
+        return Response.ofSuccess(courseService.getParticipantsOfStudent(claim.getUserId()));
+    }
 }

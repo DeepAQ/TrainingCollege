@@ -251,6 +251,7 @@ public class OrderService {
             Course course = courseMapper.getById(order.getCourseId());
             return OrderListDto.builder()
                     .id(order.getId())
+                    .courseId(course.getId())
                     .courseName(course.getTitle())
                     .count(order.getCount())
                     .origPrice(order.getOrigPrice())
@@ -265,6 +266,7 @@ public class OrderService {
             Course course = courseMapper.getById(order.getCourseId());
             return OrderListDto.builder()
                     .id(order.getId())
+                    .courseId(course.getId())
                     .courseName(course.getTitle())
                     .count(order.getCount())
                     .origPrice(order.getOrigPrice())
@@ -289,6 +291,10 @@ public class OrderService {
                 return;
             }
         }
+        // refund
+        payService.refund(order.getStudentId(), order.getPayPrice());
+        orderMapper.updateStatus(order.getId(), Order.Status.CANCELLED);
+        participantMapper.makeValid(order.getId(), 0);
         throw new ServiceException("配班失败，所有班级均不足名额");
     }
 
@@ -336,7 +342,7 @@ public class OrderService {
                 payService.refund(order.getStudentId(), refund);
             }
         }
-        // paid
+        // cancel
         orderMapper.updateStatus(order.getId(), Order.Status.CANCELLED);
         participantMapper.makeValid(order.getId(), 0);
     }

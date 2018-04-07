@@ -106,4 +106,31 @@ public class CourseService {
         courseClass.setCourseId(courseId);
         classMapper.insert(courseClass);
     }
+
+    public List<ParticipantDto> getParticipantsOfClass(Integer classId) {
+        return participantMapper.getByClassId(classId).stream().map(p -> {
+            return ParticipantDto.builder()
+                    .id(p.getId())
+                    .name(p.getName())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    public List<CourseParticipantDto> getParticipantsOfStudent(Integer studentId) {
+        return participantMapper.getByClassId(studentId).stream().map(p -> {
+            String teacher = "未分配班级";
+            if (p.getClassId() > 0) {
+                CourseClass courseClass = classMapper.getById(p.getClassId());
+                teacher = courseClass.getTeacher();
+            }
+            Course course = courseMapper.getById(p.getCourseId());
+            return CourseParticipantDto.builder()
+                    .id(p.getId())
+                    .courseId(p.getCourseId())
+                    .courseName(course.getTitle())
+                    .teacher(teacher)
+                    .name(p.getName())
+                    .build();
+        }).collect(Collectors.toList());
+    }
 }

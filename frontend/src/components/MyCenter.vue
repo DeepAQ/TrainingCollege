@@ -12,16 +12,16 @@
           <MenuItem name="terminate">
             <Icon type="close"></Icon> 账户注销
           </MenuItem>
+          <MenuItem name="stats">
+            <Icon type="pie-graph"></Icon> 数据统计
+          </MenuItem>
         </MenuGroup>
         <MenuGroup title="订单管理">
           <MenuItem name="orders">
             <Icon type="android-list"></Icon> 我的订单
           </MenuItem>
-          <MenuItem name="classes">
-            <Icon type="university"></Icon> 我的课程
-          </MenuItem>
-          <MenuItem name="stats">
-            <Icon type="pie-graph"></Icon> 数据统计
+          <MenuItem name="records">
+            <Icon type="university"></Icon> 我参加的
           </MenuItem>
         </MenuGroup>
       </Menu>
@@ -30,6 +30,9 @@
         <MenuGroup title="基本信息">
           <MenuItem name="profile">
             <Icon type="person-stalker"></Icon> 机构信息
+          </MenuItem>
+          <MenuItem name="stats">
+            <Icon type="pie-graph"></Icon> 数据统计
           </MenuItem>
         </MenuGroup>
         <MenuGroup title="课程管理">
@@ -43,10 +46,7 @@
             <Icon type="card"></Icon> 现场缴费
           </MenuItem>
           <MenuItem name="records">
-            <Icon type="clipboard"></Icon> 听课登记
-          </MenuItem>
-          <MenuItem name="stats">
-            <Icon type="pie-graph"></Icon> 数据统计
+            <Icon type="clipboard"></Icon> 成绩与记录
           </MenuItem>
         </MenuGroup>
       </Menu>

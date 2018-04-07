@@ -16,7 +16,14 @@ export default {
     return {
       cols: [
         { title: '订单序号', key: 'id', width: 100 },
-        { title: '课程名称', key: 'courseName' },
+        {
+          title: '课程名称', key: 'courseName',
+          render: (h, p) => {
+            return h('router-link', {
+              props: { to: `/detail/${p.row.courseId}` }
+            }, p.row.courseName)
+          }
+        },
         { title: '人数', key: 'count', width: 60 },
         {
           title: '总价', width: 100,

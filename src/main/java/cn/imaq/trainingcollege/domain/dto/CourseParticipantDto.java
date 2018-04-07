@@ -1,21 +1,18 @@
 package cn.imaq.trainingcollege.domain.dto;
 
-import cn.imaq.trainingcollege.domain.entity.Order;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class OrderListDto {
+public class CourseParticipantDto {
     private Integer id;
 
     private Integer courseId;
 
     private String courseName;
 
-    private Integer count;
+    private String teacher;
 
-    private Integer origPrice;
-
-    private Order.Status status;
+    private String name;
 }

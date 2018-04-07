@@ -8,10 +8,12 @@ import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
 import StudentOrderList from '@/components/student/OrderList'
 import StudentWallet from '@/components/student/Wallet'
+import StudentRecords from '@/components/student/Records'
 import CollegeProfile from '@/components/college/Profile'
 import CollegeCourses from '@/components/college/Courses'
 import CollegePendingList from '@/components/college/PendingList'
 import CollegeSale from '@/components/college/Sale'
+import CollegeRecords from '@/components/college/Records'
 import ManagerPermit from '@/components/manager/Permit'
 
 Vue.use(Router)
@@ -51,6 +53,10 @@ export default new Router({
           component: StudentWallet
         },
         {
+          path: 'student/records',
+          component: StudentRecords
+        },
+        {
           path: 'college/profile',
           component: CollegeProfile
         },
@@ -65,6 +71,10 @@ export default new Router({
         {
           path: 'college/sale',
           component: CollegeSale
+        },
+        {
+          path: 'college/records',
+          component: CollegeRecords
         },
         {
           path: 'manager/permit',
