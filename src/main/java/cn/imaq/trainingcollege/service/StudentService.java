@@ -101,7 +101,7 @@ public class StudentService {
                 .balance(student.getBalance())
                 .points(student.getPoints())
                 .consumption(student.getConsumption())
-                .discount(discountLevel(student))
+                .discount(getDiscountLevel(student))
                 .build();
     }
 
@@ -121,10 +121,10 @@ public class StudentService {
         if (student == null) {
             throw new ServiceException("用户不存在");
         }
-        return discountLevel(student);
+        return getDiscountLevel(student);
     }
 
-    private int discountLevel(Student student) {
+    public Integer getDiscountLevel(Student student) {
         int discount = student.getConsumption() / 10000 * 5;
         if (discount > 50) {
             discount = 50;

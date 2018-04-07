@@ -14,6 +14,14 @@
         <div style="margin-top: 5px;">
           本订单将在开课前两周内配班
         </div>
+        <template v-if="discount > 0">
+          <div style="margin-top: 5px;">
+            优惠幅度：{{discount}}%
+          </div>
+          <div style="margin-top: 5px;">
+            优惠后价格：¥ {{Math.floor(avgPrice * count * (100 - discount) / 100) / 100}}
+          </div>
+        </template>
         <Input v-model="names[idx - 1]" style="width: 100px; margin: 5px 10px 0 0;" :placeholder="`学员姓名 (${idx})`" v-for="idx in count"/>
       </div>
       <div slot="footer" style="text-align: left;">
@@ -32,6 +40,7 @@ export default {
       show: false,
       courseId: 0,
       avgPrice: 0,
+      discount: 0,
       count: 1,
       names: []
     }
@@ -45,15 +54,13 @@ export default {
   },
   methods: {
     loadData() {
-      if (this.classId > 0) {
-        api('order/classinfo', { classId: this.classId }).then(result => {
-          if (result) {
-            this.classInfo = result
-          }
-        }).catch(reason => {
-          this.$Message.error(reason)
-        })
-      }
+      api('student/wallet', {}).then(result => {
+        if (result) {
+          this.discount = result.discount
+        }
+      }).catch(reason => {
+        this.$Message.error(reason)
+      })
     },
     submit () {
       let finalNames = []

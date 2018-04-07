@@ -12,9 +12,9 @@
           <MenuItem name="terminate">
             <Icon type="close"></Icon> 账户注销
           </MenuItem>
-          <MenuItem name="stats">
+          <!-- <MenuItem name="stats">
             <Icon type="pie-graph"></Icon> 数据统计
-          </MenuItem>
+          </MenuItem> -->
         </MenuGroup>
         <MenuGroup title="订单管理">
           <MenuItem name="orders">

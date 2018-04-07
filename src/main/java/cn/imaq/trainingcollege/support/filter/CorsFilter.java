@@ -10,6 +10,7 @@ import java.io.IOException;
 public class CorsFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+        res.addHeader("Autumn-Thread", Thread.currentThread().getName());
         res.addHeader("Access-Control-Allow-Origin", "*");
         if (req.getMethod().equals("OPTIONS")) {
             res.setStatus(200);

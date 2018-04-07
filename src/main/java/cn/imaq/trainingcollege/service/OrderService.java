@@ -31,6 +31,9 @@ public class OrderService {
     private StudentMapper studentMapper;
 
     @Autumnwired
+    private StudentService studentService;
+
+    @Autumnwired
     private PayService payService;
 
     @Autumnwired
@@ -70,13 +73,14 @@ public class OrderService {
         }
         // insert order
         Course course = courseMapper.getById(courseClass.getCourseId());
+        Integer discount = studentService.getDiscountLevel(student);
         Order order = Order.builder()
                 .studentId(studentId)
                 .collegeId(course.getCollegeId())
                 .courseId(courseClass.getCourseId())
                 .classId(courseClass.getId())
                 .count(count)
-                .origPrice(count * courseClass.getPrice())
+                .origPrice(count * courseClass.getPrice() * (100 - discount) / 100)
                 .status(Order.Status.CLOSED)
                 .created((int) (System.currentTimeMillis() / 1000))
                 .build();
@@ -137,6 +141,7 @@ public class OrderService {
             throw new ServiceException("该课程暂无班级，无法报名");
         }
         int avgPrice = classes.stream().mapToInt(x -> x.getPrice() * x.getLimit()).sum() / totalLimit;
+        Integer discount = studentService.getDiscountLevel(student);
         // insert order
         Order order = Order.builder()
                 .studentId(studentId)
@@ -144,7 +149,7 @@ public class OrderService {
                 .courseId(dto.getCourseId())
                 .classId(0)
                 .count(count)
-                .origPrice(count * avgPrice)
+                .origPrice(count * avgPrice * (100 - discount) / 100)
                 .status(Order.Status.NOT_PAID)
                 .created((int) (System.currentTimeMillis() / 1000))
                 .build();
@@ -175,6 +180,7 @@ public class OrderService {
             throw new ServiceException("请填写所有学员姓名");
         }
         int studentId = 0;
+        Integer discount = 0;
         if (!StringUtils.isBlank(dto.getEmail())) {
             Student student = studentMapper.getByEmail(dto.getEmail());
             if (student == null) {
@@ -184,6 +190,7 @@ public class OrderService {
                 throw new ServiceException("该会员已注销，不能再报名新课程");
             }
             studentId = student.getId();
+            discount = studentService.getDiscountLevel(student);
         }
         CourseClass courseClass = classMapper.getById(dto.getClassId());
         if (courseClass == null) {
@@ -194,7 +201,7 @@ public class OrderService {
             throw new ServiceException("无权限");
         }
         // insert order
-        int totalPrice = count * courseClass.getPrice();
+        int totalPrice = count * courseClass.getPrice() * (100 - discount) / 100;
         Order order = Order.builder()
                 .studentId(studentId)
                 .collegeId(course.getCollegeId())

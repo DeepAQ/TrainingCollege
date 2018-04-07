@@ -12,8 +12,16 @@
           本单限 {{maxCount}} 人
         </div>
         <div style="margin-top: 5px;">
-          总价：¥ {{classInfo.courseClass.price * count / 100}}（优惠可在支付时使用）
+          总价：¥ {{classInfo.courseClass.price * count / 100}}
         </div>
+        <template v-if="discount > 0">
+          <div style="margin-top: 5px;">
+            优惠幅度：{{discount}}%
+          </div>
+          <div style="margin-top: 5px;">
+            优惠后价格：¥ {{Math.floor(classInfo.courseClass.price * count * (100 - discount) / 100) / 100}}
+          </div>
+        </template>
         <Input v-model="names[idx - 1]" style="width: 100px; margin: 5px 10px 0 0;" :placeholder="`学员姓名 (${idx})`" v-for="idx in count"/>
       </div>
       <div slot="footer" style="text-align: left;">
@@ -33,7 +41,8 @@ export default {
       classId: 0,
       classInfo: {},
       count: 1,
-      names: []
+      names: [],
+      discount: 0,
     }
   },
   watch: {
@@ -54,6 +63,13 @@ export default {
         api('order/classinfo', { classId: this.classId }).then(result => {
           if (result) {
             this.classInfo = result
+          }
+        }).catch(reason => {
+          this.$Message.error(reason)
+        })
+        api('student/wallet', {}).then(result => {
+          if (result) {
+            this.discount = result.discount
           }
         }).catch(reason => {
           this.$Message.error(reason)
