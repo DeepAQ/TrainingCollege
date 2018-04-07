@@ -32,7 +32,7 @@
             <Icon type="person-stalker"></Icon> 机构信息
           </MenuItem>
           <MenuItem name="stats">
-            <Icon type="pie-graph"></Icon> 数据统计
+            <Icon type="pie-graph"></Icon> 财务统计
           </MenuItem>
         </MenuGroup>
         <MenuGroup title="课程管理">
@@ -56,12 +56,12 @@
           <MenuItem name="permit">
             <Icon type="android-checkbox-outline"></Icon> 机构审批
           </MenuItem>
-          <MenuItem name="classes">
+          <MenuItem name="settlements">
             <Icon type="card"></Icon> 财务结算
           </MenuItem>
-          <MenuItem name="stats">
+          <!-- <MenuItem name="stats">
             <Icon type="pie-graph"></Icon> 数据统计
-          </MenuItem>
+          </MenuItem> -->
         </MenuGroup>
       </Menu>
     </Sider>

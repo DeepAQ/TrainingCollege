@@ -15,20 +15,22 @@
       <div><Icon type="ios-location"></Icon> {{detail.college.location}}</div>
       <div><Icon type="document-text"></Icon> {{detail.college.description}}</div>
     </div>
-    <h3>报名课程</h3>
-    <div>
-      <RadioGroup v-model="chosenClass" vertical>
-        <Radio size="large" :label="0" v-if="detail.avgPrice > 0">
-          ¥ {{detail.avgPrice / 100}}（不选班级，开课前两周内配班）
-        </Radio>
-        <Radio size="large" :label="c.id" v-for="c in detail.classes">
-          ¥ {{c.price / 100}}（教师：{{c.teacher}}，班级人数：{{c.limit}}）
-        </Radio>
-      </RadioGroup>
-    </div>
-    <Button size="large" type="primary" style="margin-top: 10px;" @click="toOrder">报名</Button>
-    <OrderDetail ref="od"/>
-    <OrderDetailNoClass ref="odnc"/>
+    <template v-if="loginType == 'Student'">
+      <h3>报名课程</h3>
+      <div>
+        <RadioGroup v-model="chosenClass" vertical>
+          <Radio size="large" :label="0" v-if="detail.avgPrice > 0">
+            ¥ {{detail.avgPrice / 100}}（不选班级，开课前两周内配班）
+          </Radio>
+          <Radio size="large" :label="c.id" v-for="c in detail.classes">
+            ¥ {{c.price / 100}}（教师：{{c.teacher}}，班级人数：{{c.limit}}）
+          </Radio>
+        </RadioGroup>
+      </div>
+      <Button size="large" type="primary" style="margin-top: 10px;" @click="toOrder">报名</Button>
+      <OrderDetail ref="od"/>
+      <OrderDetailNoClass ref="odnc"/>
+    </template>
   </div>
 </template>
 
@@ -48,6 +50,9 @@ export default {
   computed: {
     courseId () {
       return this.$route.params.id
+    },
+    loginType () {
+      return window.$state.loginType
     }
   },
   watch: {

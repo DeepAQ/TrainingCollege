@@ -28,4 +28,7 @@ public interface OrderMapper {
 
     @Update("UPDATE `orders` SET `class_id` = #{arg1} WHERE `id` = #{arg0}")
     Integer updateClassId(Integer id, Integer classId);
+
+    @Select("SELECT sum(pay_price) FROM `orders` WHERE `college_id` = #{arg0} AND `status` = #{arg1}")
+    Integer sumByCollegeId(Integer collegeId, Order.Status status);
 }

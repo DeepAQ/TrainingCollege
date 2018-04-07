@@ -17,6 +17,9 @@ public interface CollegeMapper {
     @Select("SELECT * FROM `colleges` WHERE `pending_profile_id` IS NOT NULL")
     List<College> getPendings();
 
+    @Select("SELECT * FROM `colleges` WHERE `profile_id` IS NOT NULL")
+    List<College> getAll();
+
     @Update("UPDATE `colleges` SET `profile_id` = #{arg1}, `pending_profile_id` = NULL WHERE `id` = #{arg0}")
     Integer updateProfile(Integer id, Integer profileId);
 

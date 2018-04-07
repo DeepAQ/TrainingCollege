@@ -4,6 +4,7 @@ import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
+import cn.imaq.autumn.rest.core.RequestMethod;
 import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.Response;
 import cn.imaq.trainingcollege.domain.entity.Grade;
@@ -16,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 @RestController
-@RequestMapping("/record")
+@RequestMapping(value = "/record", method = RequestMethod.POST)
 public class RecordController {
     @Autumnwired
     private RecordService recordService;
