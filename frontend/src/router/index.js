@@ -10,6 +10,7 @@ import StudentOrderList from '@/components/student/OrderList'
 import CollegeProfile from '@/components/college/Profile'
 import CollegeCourses from '@/components/college/Courses'
 import CollegePendingList from '@/components/college/PendingList'
+import CollegeSale from '@/components/college/Sale'
 import ManagerPermit from '@/components/manager/Permit'
 
 Vue.use(Router)
@@ -55,6 +56,10 @@ export default new Router({
         {
           path: 'college/orders',
           component: CollegePendingList
+        },
+        {
+          path: 'college/sale',
+          component: CollegeSale
         },
         {
           path: 'manager/permit',

@@ -41,6 +41,15 @@ public class OrderController {
         return Response.ofSuccess();
     }
 
+    @RequestMapping("/newsale")
+    public Response newOrderSale(@JWTClaim LoginClaim claim, @JSONBody NewOrderSaleDto dto) {
+        if (claim == null || claim.getUserType() != UserType.College) {
+            return Response.ofFailure("无权限");
+        }
+        orderService.newOrderSale(claim.getUserId(), dto);
+        return Response.ofSuccess();
+    }
+
     @RequestMapping("/my")
     public Response<List<OrderListDto>> myOrders(@JWTClaim LoginClaim claim) {
         if (claim == null || claim.getUserType() != UserType.Student) {

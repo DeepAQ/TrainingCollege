@@ -2,10 +2,7 @@ package cn.imaq.trainingcollege.service;
 
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
-import cn.imaq.trainingcollege.domain.dto.ClassInfoDto;
-import cn.imaq.trainingcollege.domain.dto.NewOrderDto;
-import cn.imaq.trainingcollege.domain.dto.NewOrderNoClassDto;
-import cn.imaq.trainingcollege.domain.dto.OrderListDto;
+import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.entity.*;
 import cn.imaq.trainingcollege.mapper.*;
 import cn.imaq.trainingcollege.support.exception.ServiceException;
@@ -129,14 +126,18 @@ public class OrderService {
         if (student.getStatus() == Student.Status.TERMINATED) {
             throw new ServiceException("该会员已注销，不能再报名新课程");
         }
-        // insert order
         Course course = courseMapper.getById(dto.getCourseId());
+        long delta = course.getStartTime() - System.currentTimeMillis() / 1000;
+        if (delta < 14 * 24 * 3600) {
+            throw new ServiceException("当前距离开课不到两周，请选择班级报名");
+        }
         List<CourseClass> classes = classMapper.getByCourseId(dto.getCourseId());
         int totalLimit = classes.stream().mapToInt(CourseClass::getLimit).sum();
         if (totalLimit <= 0) {
             throw new ServiceException("该课程暂无班级，无法报名");
         }
         int avgPrice = classes.stream().mapToInt(x -> x.getPrice() * x.getLimit()).sum() / totalLimit;
+        // insert order
         Order order = Order.builder()
                 .studentId(studentId)
                 .collegeId(course.getCollegeId())
@@ -163,6 +164,84 @@ public class OrderService {
         for (Participant participant : participants) {
             participantMapper.insert(participant);
         }
+    }
+
+    public void newOrderSale(Integer collegeId, NewOrderSaleDto dto) {
+        if (dto.getNames() == null || dto.getNames().isEmpty()) {
+            throw new ServiceException("学员数量不能为 0");
+        }
+        int count = dto.getNames().size();
+        if (StringUtils.isAnyBlank(dto.getNames().toArray(new String[0]))) {
+            throw new ServiceException("请填写所有学员姓名");
+        }
+        int studentId = 0;
+        if (!StringUtils.isBlank(dto.getEmail())) {
+            Student student = studentMapper.getByEmail(dto.getEmail());
+            if (student == null) {
+                throw new ServiceException("该邮箱尚未注册会员");
+            }
+            if (student.getStatus() == Student.Status.TERMINATED) {
+                throw new ServiceException("该会员已注销，不能再报名新课程");
+            }
+            studentId = student.getId();
+        }
+        CourseClass courseClass = classMapper.getById(dto.getClassId());
+        if (courseClass == null) {
+            throw new ServiceException("班级不存在");
+        }
+        Course course = courseMapper.getById(courseClass.getCourseId());
+        if (!course.getCollegeId().equals(collegeId)) {
+            throw new ServiceException("无权限");
+        }
+        // insert order
+        int totalPrice = count * courseClass.getPrice();
+        Order order = Order.builder()
+                .studentId(studentId)
+                .collegeId(course.getCollegeId())
+                .courseId(courseClass.getCourseId())
+                .classId(courseClass.getId())
+                .count(count)
+                .origPrice(totalPrice)
+                .payPrice(totalPrice)
+                .status(Order.Status.CLOSED)
+                .created((int) (System.currentTimeMillis() / 1000))
+                .build();
+        orderMapper.insert(order);
+        // get paid count
+        int paidCount = participantMapper.countByClassId(courseClass.getId());
+        // lock redis
+        String lockScript = "local remain = KEYS[3] + 0 " +
+                "for k, v in ipairs(redis.call('keys', 'class_' .. KEYS[1] .. '_*')) do " +
+                "remain = remain - redis.call('get', v) end " +
+                "if (remain >= KEYS[4] + 0) then " +
+                "redis.call('setex', 'class_' .. KEYS[1] .. '_order_' .. KEYS[2], KEYS[5] + 0, KEYS[4]) return 1 " +
+                "else return 0 end";
+        int redisResult = ((Long) jedis.eval(lockScript, 5, String.valueOf(courseClass.getId()), String.valueOf(order.getId()), String.valueOf(courseClass.getLimit() - paidCount), String.valueOf(count), String.valueOf(15 * 60))).intValue();
+        if (redisResult != 1) {
+            throw new ServiceException("销售火爆，名额不足，请重新尝试报名");
+        }
+        orderMapper.updateStatus(order.getId(), Order.Status.PAID);
+        if (studentId > 0) {
+            payService.casConsumption(studentId, totalPrice);
+            payService.casPoints(studentId, totalPrice / 100);
+        }
+        // insert participants
+        int finalStudentId = studentId;
+        List<Participant> participants = dto.getNames().stream().map(x -> {
+            return Participant.builder()
+                    .studentId(finalStudentId)
+                    .courseId(courseClass.getCourseId())
+                    .classId(courseClass.getId())
+                    .orderId(order.getId())
+                    .name(x)
+                    .status(Participant.Status.INVALID)
+                    .build();
+        }).collect(Collectors.toList());
+        for (Participant participant : participants) {
+            participantMapper.insert(participant);
+        }
+        // unlock redis
+        jedis.del("class_" + courseClass.getId() + "_order_" + order.getId());
     }
 
     public List<OrderListDto> getStudentOrderList(Integer studentId) {

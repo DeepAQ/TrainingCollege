@@ -21,12 +21,8 @@ public class PayService {
                 break;
             }
         }
-        while (true) {
-            Student student = studentMapper.getById(studentId);
-            if (studentMapper.casConsumption(studentId, student.getConsumption(), student.getConsumption() + amount) > 0) {
-                break;
-            }
-        }
+        casConsumption(studentId, amount);
+        casPoints(studentId, amount / 100);
     }
 
     public void refund(Integer studentId, Integer amount) {
@@ -36,9 +32,23 @@ public class PayService {
                 break;
             }
         }
+        casConsumption(studentId, -amount);
+        casPoints(studentId, -amount / 100);
+    }
+
+    public void casConsumption(Integer studentId, Integer delta) {
         while (true) {
             Student student = studentMapper.getById(studentId);
-            if (studentMapper.casConsumption(studentId, student.getConsumption(), student.getConsumption() - amount) > 0) {
+            if (studentMapper.casConsumption(studentId, student.getConsumption(), student.getConsumption() + delta) > 0) {
+                break;
+            }
+        }
+    }
+
+    public void casPoints(Integer studentId, Integer delta) {
+        while (true) {
+            Student student = studentMapper.getById(studentId);
+            if (studentMapper.casPoints(studentId, student.getPoints(), student.getPoints() + delta) > 0) {
                 break;
             }
         }
