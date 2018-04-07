@@ -17,6 +17,9 @@ public class StudentService {
     @Autumnwired
     private StudentMapper studentMapper;
 
+    @Autumnwired
+    private PayService payService;
+
     public LoginResultDto login(StudentLoginDto dto) {
         Student student = studentMapper.getByEmail(dto.getEmail());
         if (student == null) {
@@ -54,7 +57,7 @@ public class StudentService {
             throw new ServiceException("用户已激活，无需重复发送");
         }
         String token = JWTUtil.sign(student.getEmail());
-        String link = Sensitive.BASE_URL + "/activate.html?token=" + token;
+        String link = Sensitive.BASE_URL + "/#/activate/" + token;
         try {
             MailUtil.sendAsync(MailUtil.subject("TrainingCollege 学员账号激活")
                     .from("TrainingCollege")
@@ -87,5 +90,45 @@ public class StudentService {
             throw new ServiceException("该状态下无法注销");
         }
         studentMapper.updateStatus(id, Student.Status.TERMINATED);
+    }
+
+    public StudentWalletDto getWallet(Integer id) {
+        Student student = studentMapper.getById(id);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        return StudentWalletDto.builder()
+                .balance(student.getBalance())
+                .points(student.getPoints())
+                .consumption(student.getConsumption())
+                .discount(discountLevel(student))
+                .build();
+    }
+
+    public void exchangePoints(Integer id, Integer points) {
+        if (points <= 0) {
+            throw new ServiceException("FA♂Q");
+        }
+        Student student = studentMapper.getById(id);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        payService.exchangePoints(id, points);
+    }
+
+    public Integer getDiscountLevel(Integer id) {
+        Student student = studentMapper.getById(id);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        return discountLevel(student);
+    }
+
+    private int discountLevel(Student student) {
+        int discount = student.getConsumption() / 10000 * 5;
+        if (discount > 50) {
+            discount = 50;
+        }
+        return discount;
     }
 }

@@ -32,8 +32,7 @@ export default {
   methods: {
     doTerminate () {
       api('student/terminate', {}).then(result => {
-        window.$state.logout()
-        window.location = '/'
+        this.$Message.info('注销成功')
       }).catch(reason => {
         this.$Message.error(reason)
       })

@@ -3,10 +3,12 @@ package cn.imaq.trainingcollege.controller;
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
+import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
 import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.Response;
 import cn.imaq.trainingcollege.domain.dto.StudentProfileDto;
+import cn.imaq.trainingcollege.domain.dto.StudentWalletDto;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
 import cn.imaq.trainingcollege.service.StudentService;
 import cn.imaq.trainingcollege.support.annotation.JWTClaim;
@@ -31,6 +33,23 @@ public class StudentController {
             return Response.ofFailure("无权限");
         }
         studentService.terminate(claim.getUserId());
+        return Response.ofSuccess();
+    }
+
+    @RequestMapping("/wallet")
+    public Response<StudentWalletDto> wallet(@JWTClaim LoginClaim claim) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("无权限");
+        }
+        return Response.ofSuccess(studentService.getWallet(claim.getUserId()));
+    }
+
+    @RequestMapping("/wallet/exchange")
+    public Response exchange(@JWTClaim LoginClaim claim, @JSONBody("count") Integer count) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("无权限");
+        }
+        studentService.exchangePoints(claim.getUserId(), count);
         return Response.ofSuccess();
     }
 }

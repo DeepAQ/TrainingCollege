@@ -7,6 +7,7 @@ import MyCenter from '@/components/MyCenter'
 import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
 import StudentOrderList from '@/components/student/OrderList'
+import StudentWallet from '@/components/student/Wallet'
 import CollegeProfile from '@/components/college/Profile'
 import CollegeCourses from '@/components/college/Courses'
 import CollegePendingList from '@/components/college/PendingList'
@@ -44,6 +45,10 @@ export default new Router({
         {
           path: 'student/orders',
           component: StudentOrderList
+        },
+        {
+          path: 'student/wallet',
+          component: StudentWallet
         },
         {
           path: 'college/profile',

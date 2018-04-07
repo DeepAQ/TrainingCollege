@@ -36,6 +36,24 @@ public class PayService {
         casPoints(studentId, -amount / 100);
     }
 
+    public void exchangePoints(Integer studentId, Integer points) {
+        while (true) {
+            Student student = studentMapper.getById(studentId);
+            if (student.getPoints() < points) {
+                throw new ServiceException("积分不足，兑换失败");
+            }
+            if (studentMapper.casPoints(studentId, student.getPoints(), student.getPoints() - points) > 0) {
+                break;
+            }
+        }
+        while (true) {
+            Student student = studentMapper.getById(studentId);
+            if (studentMapper.casBalance(studentId, student.getBalance(), student.getBalance() + points) > 0) {
+                break;
+            }
+        }
+    }
+
     public void casConsumption(Integer studentId, Integer delta) {
         while (true) {
             Student student = studentMapper.getById(studentId);

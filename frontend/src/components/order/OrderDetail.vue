@@ -68,6 +68,7 @@ export default {
       api('order/new', { classId: this.classId, names: finalNames }).then(result => {
         this.$Message.info('报名成功')
         this.show = false
+        this.$router.push('/my/student/orders')
       }).catch(reason => {
         this.$Message.error(reason)
         this.loadData()
