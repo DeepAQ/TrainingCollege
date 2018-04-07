@@ -15,6 +15,11 @@
                 <property name="url" value="jdbc:mysql://localhost:3306/trainingcollege?characterEncoding=UTF8&amp;useAffectedRows=true" />
                 <property name="username" value="j2ee" />
                 <property name="password" value="j2ee" />
+                <property name="poolPingEnabled" value="true"/>
+                <property name="poolPingQuery" value="SELECT now()"/>
+                <property name="poolPingConnectionsNotUsedFor" value="300000"/>
+                <property name="poolMaximumActiveConnections" value="100"/>
+                <property name="poolMaximumIdleConnections" value="20"/>
             </dataSource>
         </environment>
     </environments>

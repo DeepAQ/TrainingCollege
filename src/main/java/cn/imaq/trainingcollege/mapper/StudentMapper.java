@@ -18,6 +18,9 @@ public interface StudentMapper {
     @Update("UPDATE `students` SET `status` = #{arg1} WHERE `id` = #{arg0}")
     Integer updateStatus(Integer studentId, Student.Status status);
 
+    @Update("UPDATE `students` SET `pwd_hash` = #{arg1} WHERE `id` = #{arg0}")
+    Integer updatePwdHash(Integer studentId, String pwdHash);
+
     @Update("UPDATE `students` SET `balance` = #{arg2} WHERE `id` = #{arg0} AND `balance` = #{arg1}")
     Integer casBalance(Integer studentId, Integer oldValue, Integer newValue);
 

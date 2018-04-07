@@ -117,7 +117,7 @@ public class CourseService {
     }
 
     public List<CourseParticipantDto> getParticipantsOfStudent(Integer studentId) {
-        return participantMapper.getByClassId(studentId).stream().map(p -> {
+        return participantMapper.getByStudentId(studentId).stream().map(p -> {
             String teacher = "未分配班级";
             if (p.getClassId() > 0) {
                 CourseClass courseClass = classMapper.getById(p.getClassId());

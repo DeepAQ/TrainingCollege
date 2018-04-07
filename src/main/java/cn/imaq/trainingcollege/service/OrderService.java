@@ -241,7 +241,7 @@ public class OrderService {
                     .classId(courseClass.getId())
                     .orderId(order.getId())
                     .name(x)
-                    .status(Participant.Status.INVALID)
+                    .status(Participant.Status.VALID)
                     .build();
         }).collect(Collectors.toList());
         for (Participant participant : participants) {

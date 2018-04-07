@@ -103,6 +103,7 @@ export default {
         period: 1,
         weeks: 1
       }
+      this.startDate = null
       this.addNew = true
     },
     saveClick () {

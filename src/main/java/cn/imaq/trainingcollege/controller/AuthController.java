@@ -4,6 +4,7 @@ import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
+import cn.imaq.autumn.rest.annotation.param.RequestParam;
 import cn.imaq.autumn.rest.core.RequestMethod;
 import cn.imaq.trainingcollege.domain.dto.*;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
@@ -53,6 +54,12 @@ public class AuthController {
             return Response.ofFailure("登录信息无效，请重新登录");
         }
         studentService.sendActivicationEmail(claim.getUserId());
+        return Response.ofSuccess();
+    }
+
+    @RequestMapping("/student/activate")
+    public Response activateEmail(@RequestParam("token") String token) {
+        studentService.activate(token);
         return Response.ofSuccess();
     }
 

@@ -13,6 +13,13 @@
       <Col span="3"><Icon type="unlocked"></Icon> 账户状态</Col>
       <Col>{{ status }}</Col>
     </Row>
+    <h2>密码修改</h2>
+    <div>
+      <div><Input v-model="password" type="password" placeholder="当前密码"/></div>
+      <div><Input v-model="newPassword" type="password" placeholder="新密码"/></div>
+      <div><Input v-model="newPassword2" type="password" placeholder="重复新密码"/></div>
+      <Button type="primary" @click="modifyPassword">修改</Button>
+    </div>
   </div>
 </template>
 
@@ -22,7 +29,10 @@ import api from '@/api'
 export default {
   data () {
     return {
-      profile: {}
+      profile: {},
+      password: '',
+      newPassword: '',
+      newPassword2: ''
     }
   },
   computed: {
@@ -45,6 +55,22 @@ export default {
     }).catch(reason => {
       this.$Message.error(reason)
     })
+  },
+  methods: {
+    modifyPassword () {
+      if (this.newPassword != this.newPassword2) {
+        this.$Message.error('新密码不一致')
+        return
+      }
+      api('student/modifypassword', {
+        oldPassword: this.password,
+        newPassword: this.newPassword
+      }).then(result => {
+        this.$Message.info('密码修改成功')
+      }).catch(reason => {
+        this.$Message.error(reason)
+      })
+    }
   }
 }
 </script>
@@ -56,5 +82,10 @@ h2, .ivu-row {
 
 .ivu-icon {
   width: 16px;
+}
+
+.ivu-input-wrapper {
+  width: 300px;
+  margin-bottom: 10px;
 }
 </style>

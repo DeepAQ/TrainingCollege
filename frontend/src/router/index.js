@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import CourseList from '@/components/CourseList'
 import CourseDetail from '@/components/CourseDetail'
 import MyCenter from '@/components/MyCenter'
+import EmailVerify from '@/components/student/EmailVerify'
 import StudentProfile from '@/components/student/Profile'
 import StudentTerminate from '@/components/student/Terminate'
 import StudentOrderList from '@/components/student/OrderList'
@@ -25,6 +26,10 @@ export default new Router({
     {
       path: '/',
       component: CourseList
+    },
+    {
+      path: '/activate/:token',
+      component: EmailVerify
     },
     {
       path: '/courses',

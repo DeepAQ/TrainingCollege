@@ -69,6 +69,26 @@ public class StudentService {
         }
     }
 
+    public void activate(String token) {
+        String email = (String) JWTUtil.parse(token);
+        Student student = studentMapper.getByEmail(email);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        studentMapper.updateStatus(student.getId(), Student.Status.VERIFIED);
+    }
+
+    public void modifyPassword(Integer studentId, String oldPassword, String newPassword) {
+        Student student = studentMapper.getById(studentId);
+        if (student == null) {
+            throw new ServiceException("用户不存在");
+        }
+        if (!student.getPwdHash().equals(HashUtil.hash(oldPassword))) {
+            throw new ServiceException("旧密码错误");
+        }
+        studentMapper.updatePwdHash(studentId, HashUtil.hash(newPassword));
+    }
+
     public StudentProfileDto getProfile(Integer id) {
         Student student = studentMapper.getById(id);
         if (student == null) {

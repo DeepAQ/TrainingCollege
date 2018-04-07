@@ -7,7 +7,7 @@
     <Icon type="android-time" style="margin-left: 20px;"></Icon>
     {{detail.weeks}} 周，每周 {{detail.period}} 课时
     <h3>课程介绍</h3>
-    <div>
+    <div style="white-space: pre-wrap;">
       {{detail.description}}
     </div>
     <h3>机构介绍</h3>
