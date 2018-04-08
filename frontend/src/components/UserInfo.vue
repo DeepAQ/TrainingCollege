@@ -138,7 +138,7 @@ export default {
                 this.$Message.error(reason)
               })
             }
-          });
+          })
         } else {
           window.$state.login(result.token, result.displayName, result.userType)
           this.$Message.info('登录成功')

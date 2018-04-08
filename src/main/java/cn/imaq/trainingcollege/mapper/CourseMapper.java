@@ -17,6 +17,9 @@ public interface CourseMapper {
     @Select("SELECT * FROM `courses` ORDER BY `start_time` DESC")
     List<Course> getAll();
 
+    @Select("SELECT * FROM `courses` WHERE `title` LIKE concat('%',#{kw},'%') OR `tags` LIKE concat('%',#{kw},'%') ORDER BY `start_time` DESC")
+    List<Course> getByKeyword(String kw);
+
     @Select("SELECT * FROM `courses` WHERE `id` = #{id}")
     Course getById(Integer id);
 

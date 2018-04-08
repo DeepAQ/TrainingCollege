@@ -9,6 +9,7 @@ import cn.imaq.trainingcollege.domain.entity.CourseClass;
 import cn.imaq.trainingcollege.mapper.ClassMapper;
 import cn.imaq.trainingcollege.mapper.CourseMapper;
 import cn.imaq.trainingcollege.mapper.ParticipantMapper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,8 +32,14 @@ public class CourseService {
     @Autumnwired
     private OrderService orderService;
 
-    public List<CourseListDto> getCourseList() {
-        return courseMapper.getAll().stream().map(x -> {
+    public List<CourseListDto> getCourseList(String kw) {
+        List<Course> courses;
+        if (StringUtils.isBlank(kw)) {
+            courses = courseMapper.getAll();
+        } else {
+            courses = courseMapper.getByKeyword(kw);
+        }
+        return courses.stream().map(x -> {
             try {
                 CollegeProfileDto profile = collegeService.getProfiles(x.getCollegeId());
                 return CourseListDto.builder()

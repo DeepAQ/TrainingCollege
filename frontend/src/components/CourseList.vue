@@ -1,5 +1,8 @@
 <template>
   <div>
+    <Input v-model="kw" style="width: 500px;" />
+    <Button type="primary" size="large" @click="loadData">搜索</Button>
+    <Button size="large" @click="kw = ''; loadData()">重置</Button>
     <div class="item" v-for="item in list">
       <div class="pic">
         <Icon type="ios-bookmarks-outline" :size="60"></Icon>
@@ -7,7 +10,9 @@
       <div class="info">
         <div class="title">
           <a href="javascript:" @click="toDetail(item.id)">{{item.title}}</a>
-          <Tag style="margin-left: 10px;">{{item.tags}}</Tag>
+          <Tag style="margin-left: 10px;">
+            <a href="javascript:" style="color: black;" @click="kw = item.tags; loadData()">{{item.tags}}</a>
+          </Tag>
         </div>
         <div class="text">
           <Icon type="university"></Icon> {{item.collegeName}}
@@ -28,19 +33,23 @@ import api from '@/api'
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      kw: ''
     }
   },
   mounted () {
-    api('course/list', {}).then(result => {
-      if (result) {
-        this.list = result
-      }
-    }).catch(reason => {
-      this.$Message.error(reason)
-    })
+    this.loadData()
   },
   methods: {
+    loadData () {
+      api(`course/list?kw=${this.kw}`, {}).then(result => {
+        if (result) {
+          this.list = result
+        }
+      }).catch(reason => {
+        this.$Message.error(reason)
+      })
+    },
     formatDate (time) {
       let date = new Date(time * 1000)
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`

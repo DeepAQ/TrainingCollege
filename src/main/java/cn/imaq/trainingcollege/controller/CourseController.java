@@ -24,8 +24,8 @@ public class CourseController {
     private CourseService courseService;
 
     @RequestMapping("/list")
-    public Response<List<CourseListDto>> courseList() {
-        return Response.ofSuccess(courseService.getCourseList());
+    public Response<List<CourseListDto>> courseList(@RequestParam("kw") String kw) {
+        return Response.ofSuccess(courseService.getCourseList(kw));
     }
 
     @RequestMapping("/detail")
