@@ -151,8 +151,26 @@
 | util | JWTUtil | JWT 签名及验证工具类 |
 | util | MailUtil | 邮件发送工具类 |
 
-### 2、前端的各页面
+### 2、前端页面
 前端为单页面应用，采用组件化开发，详情参考前端代码。
+
+| 路由 | 组件名 | 说明 |
+| - | - | - |
+| /courses | CourseList | 课程列表页面 |
+| /detail/:id | CourseDetail | 课程详情及报名页面 |
+| /my/student/profile | StudentProfile | 学员个人信息页面 |
+| /my/student/terminate | StudentTerminate | 学员账户注销页面 |
+| /my/student/orders | StudentOrderList | 学员订单列表页面 |
+| /my/student/wallet | StudentWallet | 学员财务统计页面 |
+| /my/student/records | StudentRecords | 学员听课及成绩记录页面 |
+| /my/college/profile | CollegeProfile | 机构信息页面 |
+| /my/college/stats | CollegeStats | 机构财务统计页面 |
+| /my/college/courses | CollegeCourses | 机构课程计划页面 |
+| /my/college/orders | CollegePendingList | 机构订单配班页面 |
+| /my/college/sale | CollegeSale | 机构线下报名页面 |
+| /my/college/records | CollegeRecords | 机构听课记录及成绩管理页面 |
+| /my/manager/permit | ManagerPermit | 经理审批页面 |
+| /my/manager/settlements | ManagerSettlements | 经理财务结算页面 |
 
 ## 四、其他
 
