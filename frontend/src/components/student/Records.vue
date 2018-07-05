@@ -63,5 +63,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+h2 {
+  margin: 10px 0;
+}
 </style>

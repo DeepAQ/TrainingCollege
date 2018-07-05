@@ -18,6 +18,7 @@ import CollegeSale from '@/components/college/Sale'
 import CollegeRecords from '@/components/college/Records'
 import ManagerPermit from '@/components/manager/Permit'
 import ManagerSettlements from '@/components/manager/Settlements'
+import StudentAnalConsumption from '@/components/student/AnalConsumption'
 
 Vue.use(Router)
 
@@ -94,6 +95,10 @@ export default new Router({
         {
           path: 'manager/settlements',
           component: ManagerSettlements
+        },
+        {
+          path: 'student/anal-consumption',
+          component: StudentAnalConsumption
         },
         {
           path: ':type/:op',

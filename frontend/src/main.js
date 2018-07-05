@@ -4,11 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview'
+import VCharts from 'v-charts'
 import './styles/base.less'
 
 Vue.config.productionTip = false
 
 Vue.use(iView)
+Vue.use(VCharts)
 
 window.$state = new Vue({
   data: {

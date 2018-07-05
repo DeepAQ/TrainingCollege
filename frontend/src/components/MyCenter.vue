@@ -12,9 +12,6 @@
           <MenuItem name="terminate">
             <Icon type="close"></Icon> 账户注销
           </MenuItem>
-          <!-- <MenuItem name="stats">
-            <Icon type="pie-graph"></Icon> 数据统计
-          </MenuItem> -->
         </MenuGroup>
         <MenuGroup title="订单管理">
           <MenuItem name="orders">
@@ -22,6 +19,14 @@
           </MenuItem>
           <MenuItem name="records">
             <Icon type="university"></Icon> 我参加的
+          </MenuItem>
+        </MenuGroup>
+        <MenuGroup title="我的统计">
+          <MenuItem name="anal-consumption">
+            <Icon type="pie-graph"></Icon> 消费分析
+          </MenuItem>
+          <MenuItem name="anal-study">
+            <Icon type="pie-graph"></Icon> 学习分析
           </MenuItem>
         </MenuGroup>
       </Menu>
