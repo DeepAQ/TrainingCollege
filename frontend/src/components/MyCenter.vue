@@ -54,6 +54,14 @@
             <Icon type="clipboard"></Icon> 成绩与记录
           </MenuItem>
         </MenuGroup>
+        <MenuGroup title="机构统计">
+          <MenuItem name="anal-income">
+            <Icon type="pie-graph"></Icon> 收入分析
+          </MenuItem>
+          <MenuItem name="anal-teaching">
+            <Icon type="pie-graph"></Icon> 教学分析
+          </MenuItem>
+        </MenuGroup>
       </Menu>
 
       <Menu width="auto" :active-name="active" v-if="loginType == 'Manager'" @on-select="managerMenuSelect">

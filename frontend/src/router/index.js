@@ -20,6 +20,7 @@ import ManagerPermit from '@/components/manager/Permit'
 import ManagerSettlements from '@/components/manager/Settlements'
 import StudentAnalConsumption from '@/components/student/AnalConsumption'
 import StudentAnalStudy from '@/components/student/AnalStudy'
+import CollegeAnalIncome from '@/components/college/AnalIncome'
 
 Vue.use(Router)
 
@@ -104,6 +105,10 @@ export default new Router({
         {
           path: 'student/anal-study',
           component: StudentAnalStudy
+        },
+        {
+          path: 'college/anal-income',
+          component: CollegeAnalIncome
         },
         {
           path: ':type/:op',
