@@ -14,6 +14,9 @@ public interface OrderMapper {
     @Select("SELECT * FROM `orders` WHERE `id` = #{id}")
     Order getById(Integer id);
 
+    @Select("SELECT * FROM `orders` WHERE `created` BETWEEN #{arg0} AND #{arg1} ORDER BY `created` DESC")
+    List<Order> getByTime(Integer start, Integer end);
+
     @Select("SELECT * FROM `orders` WHERE `student_id` = #{studentId} ORDER BY `created` DESC")
     List<Order> getByStudentId(Integer studentId);
 

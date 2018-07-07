@@ -2,10 +2,7 @@ package cn.imaq.trainingcollege.service;
 
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
-import cn.imaq.trainingcollege.domain.anal.CollegeIncomeAnal;
-import cn.imaq.trainingcollege.domain.anal.CollegeTeachingAnal;
-import cn.imaq.trainingcollege.domain.anal.StudentConsumptionAnal;
-import cn.imaq.trainingcollege.domain.anal.StudentStudyAnal;
+import cn.imaq.trainingcollege.domain.anal.*;
 import cn.imaq.trainingcollege.domain.entity.Course;
 import cn.imaq.trainingcollege.domain.entity.Order;
 import cn.imaq.trainingcollege.mapper.*;
@@ -49,7 +46,7 @@ public class AnalService {
             anal.getMonthly().put(ym, anal.getMonthly().getOrDefault(ym, 0) + o.getPayPrice());
 
             String collegeName = collegeProfileMapper.getById(collegeMapper.getById(o.getCollegeId()).getProfileId()).getName();
-            anal.getByColleges().put(collegeName, anal.getByColleges().getOrDefault(collegeName, 0) + o.getPayPrice());
+            anal.getByCollege().put(collegeName, anal.getByCollege().getOrDefault(collegeName, 0) + o.getPayPrice());
 
             String tagName = courseMapper.getById(o.getCourseId()).getTags();
             anal.getByTags().put(tagName, anal.getByTags().getOrDefault(tagName, 0) + o.getPayPrice());
@@ -129,6 +126,31 @@ public class AnalService {
 
         anal.setTotal(totalPeriod[0]);
         anal.setCancelRate(orders.stream().filter(o -> o.getStatus() == Order.Status.CANCELLED).count() * 1.0 / orders.size());
+        return anal;
+    }
+
+    public ManagerIncomeAnal getManagerIncomeAnal(Integer startTime, Integer endTime) {
+        ManagerIncomeAnal anal = new ManagerIncomeAnal();
+        List<Order> orders = orderMapper.getByTime(startTime, endTime);
+
+        orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).forEach(o -> {
+            String ym = DateUtil.toYearMonth(o.getCreated());
+            anal.getMonthlyTotal().put(ym, anal.getMonthlyTotal().getOrDefault(ym, 0) + o.getPayPrice());
+            anal.getMonthlyOrders().put(ym, anal.getMonthlyOrders().getOrDefault(ym, 0) + 1);
+
+            String collegeName = collegeProfileMapper.getById(collegeMapper.getById(o.getCollegeId()).getProfileId()).getName();
+            anal.getByCollege().put(collegeName, anal.getByCollege().getOrDefault(collegeName, 0) + o.getPayPrice());
+
+            String tagName = courseMapper.getById(o.getCourseId()).getTags();
+            anal.getByTags().put(tagName, anal.getByTags().getOrDefault(tagName, 0) + o.getPayPrice());
+        });
+
+        anal.setTotal(orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).mapToInt(o -> o.getPayPrice()).sum());
+        anal.setOrders(orders.size());
+        anal.setOnlineTotal(orders.stream().filter(o -> o.getStatus() == Order.Status.PAID && o.getStudentId() > 0).mapToInt(o -> o.getPayPrice()).sum());
+        anal.setOfflineTotal(anal.getTotal() - anal.getOnlineTotal());
+        anal.setAvgPrice((int) orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).mapToInt(o -> o.getPayPrice()).average().getAsDouble());
+        anal.setFinishRate(orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).count() * 1.0 / orders.size());
         return anal;
     }
 }

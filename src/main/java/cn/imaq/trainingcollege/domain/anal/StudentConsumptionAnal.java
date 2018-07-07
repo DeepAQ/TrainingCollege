@@ -16,5 +16,5 @@ public class StudentConsumptionAnal {
 
     private Map<String, Integer> byTags = new HashMap<>();
 
-    private Map<String, Integer> byColleges = new HashMap<>();
+    private Map<String, Integer> byCollege = new HashMap<>();
 }

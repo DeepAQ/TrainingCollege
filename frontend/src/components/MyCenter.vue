@@ -72,9 +72,14 @@
           <MenuItem name="settlements">
             <Icon type="card"></Icon> 财务结算
           </MenuItem>
-          <!-- <MenuItem name="stats">
-            <Icon type="pie-graph"></Icon> 数据统计
-          </MenuItem> -->
+        </MenuGroup>
+        <MenuGroup title="平台统计">
+          <MenuItem name="anal-income">
+            <Icon type="pie-graph"></Icon> 收入分析
+          </MenuItem>
+          <MenuItem name="anal-capacity">
+            <Icon type="pie-graph"></Icon> 规模分析
+          </MenuItem>
         </MenuGroup>
       </Menu>
     </Sider>

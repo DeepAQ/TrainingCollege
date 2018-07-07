@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>消费分析</h2>
+    <h2>收入分析</h2>
     <div>
       选择分析周期：
       <DatePicker v-model="startTime" type="month" placeholder="起始时间"></DatePicker>
@@ -8,12 +8,18 @@
       <DatePicker v-model="endTime" type="month" placeholder="结束时间"></DatePicker>
       <Button type="primary" @click="loadData">开始分析</Button>
     </div>
-    <h3>总体消费情况</h3>
+    <h3>总体收入情况</h3>
+    <div>周期订单数：<span style="font-size: 24px;">{{anal.orders}}</span></div>
+    <div>周期总收入：<span style="font-size: 24px;">¥ {{anal.total / 100}}</span></div>
     <div>平均订单价格：<span style="font-size: 24px;">¥ {{anal.avgPrice / 100}}</span></div>
-    <div>订单成交率：<span style="font-size: 24px;">{{Math.floor(anal.finishRate * 10000) / 100}}%</span></div>
-    <h3>每月消费趋势</h3>
+    <div>周期订单成交率：<span style="font-size: 24px;">{{Math.floor(anal.finishRate * 10000) / 100}}%</span></div>
+    <h3>线上 / 线下收入对比</h3>
+    <ve-pie :data="chartData4" width="1100px"></ve-pie>
+    <h3>每月订单数趋势</h3>
+    <ve-line :data="chartData5" width="1100px"></ve-line>
+    <h3>每月收入趋势</h3>
     <ve-line :data="chartData1" width="1100px"></ve-line>
-    <h3>消费课程对比</h3>
+    <h3>机构 / 类别收入对比</h3>
     <div style="display: flex;">
       <ve-pie :data="chartData2" width="560px"></ve-pie>
       <ve-pie :data="chartData3" width="560px"></ve-pie>
@@ -42,6 +48,14 @@ export default {
       chartData3: {
         columns: [0, 1],
         rows: []
+      },
+      chartData4: {
+        columns: [0, 1],
+        rows: []
+      },
+      chartData5: {
+        columns: [0, 1],
+        rows: []
       }
     }
   },
@@ -50,15 +64,17 @@ export default {
   },
   methods: {
     loadData () {
-      api('anal/student/consumption', {
+      api('anal/manager/income', {
         start: Math.floor(this.startTime.getTime() / 1000) + '',
         end: Math.floor(this.endTime.getTime() / 1000) + ''
       }).then(result => {
         if (result) {
           this.anal = result
-          this.chartData1.rows = flatmap(result.monthly, 0.01)
-          this.chartData2.rows = flatmap(result.byTags, 0.01)
-          this.chartData3.rows = flatmap(result.byCollege, 0.01)
+          this.chartData1.rows = flatmap(result.monthlyTotal, 0.01)
+          this.chartData2.rows = flatmap(result.byCollege, 0.01)
+          this.chartData3.rows = flatmap(result.byTags, 0.01)
+          this.chartData4.rows = [['线上', result.onlineTotal / 100], ['线下', result.offlineTotal / 100]]
+          this.chartData5.rows = flatmap(result.monthlyOrders)
         }
       }).catch(reason => {
         this.$Message.error(reason)

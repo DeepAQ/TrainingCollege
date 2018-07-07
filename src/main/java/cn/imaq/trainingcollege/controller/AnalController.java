@@ -5,10 +5,7 @@ import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
-import cn.imaq.trainingcollege.domain.anal.CollegeIncomeAnal;
-import cn.imaq.trainingcollege.domain.anal.CollegeTeachingAnal;
-import cn.imaq.trainingcollege.domain.anal.StudentConsumptionAnal;
-import cn.imaq.trainingcollege.domain.anal.StudentStudyAnal;
+import cn.imaq.trainingcollege.domain.anal.*;
 import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.Response;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
@@ -51,5 +48,13 @@ public class AnalController {
             return Response.ofFailure("登录信息无效，请重新登录");
         }
         return Response.ofSuccess(analService.getCollegeTeachingAnal(claim.getUserId(), start, end));
+    }
+
+    @RequestMapping(value = "/manager/income")
+    public Response<ManagerIncomeAnal> getManagerIncomeAnal(@JWTClaim LoginClaim claim, @JSONBody("start") Integer start, @JSONBody("end") Integer end) {
+        if (claim == null || claim.getUserType() != UserType.Manager) {
+            return Response.ofFailure("登录信息无效，请重新登录");
+        }
+        return Response.ofSuccess(analService.getManagerIncomeAnal(start, end));
     }
 }
