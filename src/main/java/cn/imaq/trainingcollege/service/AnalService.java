@@ -3,6 +3,7 @@ package cn.imaq.trainingcollege.service;
 import cn.imaq.autumn.core.annotation.Autumnwired;
 import cn.imaq.autumn.core.annotation.Component;
 import cn.imaq.trainingcollege.domain.anal.CollegeIncomeAnal;
+import cn.imaq.trainingcollege.domain.anal.CollegeTeachingAnal;
 import cn.imaq.trainingcollege.domain.anal.StudentConsumptionAnal;
 import cn.imaq.trainingcollege.domain.anal.StudentStudyAnal;
 import cn.imaq.trainingcollege.domain.entity.Course;
@@ -104,6 +105,30 @@ public class AnalService {
         anal.setOfflineTotal(anal.getTotal() - anal.getOnlineTotal());
         anal.setAvgPrice((int) orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).mapToInt(o -> o.getPayPrice()).average().getAsDouble());
         anal.setFinishRate(orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).count() * 1.0 / orders.size());
+        return anal;
+    }
+
+    public CollegeTeachingAnal getCollegeTeachingAnal(Integer collegeId, Integer startTime, Integer endTime) {
+        CollegeTeachingAnal anal = new CollegeTeachingAnal();
+        List<Order> orders = orderMapper.getByCollegeId(collegeId).stream()
+                .filter(o -> o.getCreated() > startTime && o.getCreated() < endTime)
+                .collect(Collectors.toList());
+
+        final int[] totalPeriod = {0};
+        orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).forEach(o -> {
+            Course c = courseMapper.getById(o.getCourseId());
+            String ym = DateUtil.toYearMonth(o.getCreated());
+            int period = c.getPeriod() * c.getWeeks();
+            totalPeriod[0] += period;
+            anal.getMonthly().put(ym, anal.getMonthly().getOrDefault(ym, 0) + period);
+            anal.getByCourse().put(c.getTitle(), anal.getByCourse().getOrDefault(c.getTitle(), 0) + period);
+
+            String teacherName = classMapper.getById(o.getClassId()).getTeacher();
+            anal.getByTeacher().put(teacherName, anal.getByTeacher().getOrDefault(teacherName, 0) + period);
+        });
+
+        anal.setTotal(totalPeriod[0]);
+        anal.setCancelRate(orders.stream().filter(o -> o.getStatus() == Order.Status.CANCELLED).count() * 1.0 / orders.size());
         return anal;
     }
 }
