@@ -5,7 +5,9 @@ import cn.imaq.autumn.rest.annotation.RequestMapping;
 import cn.imaq.autumn.rest.annotation.RestController;
 import cn.imaq.autumn.rest.annotation.param.JSONBody;
 import cn.imaq.autumn.rest.core.RequestMethod;
+import cn.imaq.trainingcollege.domain.anal.CollegeIncomeAnal;
 import cn.imaq.trainingcollege.domain.anal.StudentConsumptionAnal;
+import cn.imaq.trainingcollege.domain.anal.StudentStudyAnal;
 import cn.imaq.trainingcollege.domain.dto.LoginClaim;
 import cn.imaq.trainingcollege.domain.dto.Response;
 import cn.imaq.trainingcollege.domain.enumeration.UserType;
@@ -24,5 +26,21 @@ public class AnalController {
             return Response.ofFailure("登录信息无效，请重新登录");
         }
         return Response.ofSuccess(analService.getStudentConsumptionAnal(claim.getUserId(), start, end));
+    }
+
+    @RequestMapping(value = "/student/study")
+    public Response<StudentStudyAnal> getStudentStudyAnal(@JWTClaim LoginClaim claim, @JSONBody("start") Integer start, @JSONBody("end") Integer end) {
+        if (claim == null || claim.getUserType() != UserType.Student) {
+            return Response.ofFailure("登录信息无效，请重新登录");
+        }
+        return Response.ofSuccess(analService.getStudentStudyAnal(claim.getUserId(), start, end));
+    }
+
+    @RequestMapping(value = "/college/income")
+    public Response<CollegeIncomeAnal> getCollegeIncomeAnal(@JWTClaim LoginClaim claim, @JSONBody("start") Integer start, @JSONBody("end") Integer end) {
+        if (claim == null || claim.getUserType() != UserType.College) {
+            return Response.ofFailure("登录信息无效，请重新登录");
+        }
+        return Response.ofSuccess(analService.getCollegeIncomeAnal(claim.getUserId(), start, end));
     }
 }

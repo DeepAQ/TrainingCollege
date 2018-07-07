@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>消费分析</h2>
+    <h2>学习分析</h2>
     <div>
       选择分析周期：
       <DatePicker v-model="startTime" type="month" placeholder="起始时间"></DatePicker>
@@ -8,12 +8,12 @@
       <DatePicker v-model="endTime" type="month" placeholder="结束时间"></DatePicker>
       <Button type="primary" @click="loadData">开始分析</Button>
     </div>
-    <h3>总体消费情况</h3>
-    <div>平均订单价格：<span style="font-size: 24px;">¥ {{anal.avgPrice / 100}}</span></div>
-    <div>订单成交率：<span style="font-size: 24px;">{{Math.floor(anal.finishRate * 10000) / 100}}%</span></div>
-    <h3>每月消费趋势</h3>
+    <h3>总体上课情况</h3>
+    <div>参加总课时数：<span style="font-size: 24px;">{{anal.total}}</span></div>
+    <div>总体退课率：<span style="font-size: 24px;">{{Math.floor(anal.cancelRate * 10000) / 100}}%</span></div>
+    <h3>每月参加课时数趋势</h3>
     <ve-line :data="chartData1" width="1100px"></ve-line>
-    <h3>消费课程对比</h3>
+    <h3>参加课时数对比</h3>
     <div style="display: flex;">
       <ve-pie :data="chartData2" width="560px"></ve-pie>
       <ve-pie :data="chartData3" width="560px"></ve-pie>
@@ -50,15 +50,15 @@ export default {
   },
   methods: {
     loadData () {
-      api('anal/student/consumption', {
+      api('anal/student/study', {
         start: Math.floor(this.startTime.getTime() / 1000) + '',
         end: Math.floor(this.endTime.getTime() / 1000) + ''
       }).then(result => {
         if (result) {
           this.anal = result
-          this.chartData1.rows = flatmap(result.monthly, 0.01)
-          this.chartData2.rows = flatmap(result.byTags, 0.01)
-          this.chartData3.rows = flatmap(result.byColleges, 0.01)
+          this.chartData1.rows = flatmap(result.monthly)
+          this.chartData2.rows = flatmap(result.byCourse)
+          this.chartData3.rows = flatmap(result.byTags)
         }
       }).catch(reason => {
         this.$Message.error(reason)

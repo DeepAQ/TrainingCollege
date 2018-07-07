@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Data
-public class StudentConsumptionAnal {
+public class StudentStudyAnal {
+    private Integer total;
+
     private Map<String, Integer> monthly = new TreeMap<>();
 
-    private Integer avgPrice;
+    private Double cancelRate;
 
-    private Double finishRate;
+    private Map<String, Integer> byCourse = new HashMap<>();
 
     private Map<String, Integer> byTags = new HashMap<>();
-
-    private Map<String, Integer> byColleges = new HashMap<>();
 }

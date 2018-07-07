@@ -17,6 +17,9 @@ public interface OrderMapper {
     @Select("SELECT * FROM `orders` WHERE `student_id` = #{studentId} ORDER BY `created` DESC")
     List<Order> getByStudentId(Integer studentId);
 
+    @Select("SELECT * FROM `orders` WHERE `college_id` = #{collegeId} ORDER BY `created` DESC")
+    List<Order> getByCollegeId(Integer collegeId);
+
     @Select("SELECT * FROM `orders` WHERE `college_id` = #{arg0} AND `class_id` = 0 AND `status` = #{arg1} ORDER BY `created` DESC")
     List<Order> getPendingsByCollegeId(Integer collegeId, Order.Status status);
 
