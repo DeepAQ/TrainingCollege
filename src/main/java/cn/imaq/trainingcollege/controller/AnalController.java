@@ -57,4 +57,12 @@ public class AnalController {
         }
         return Response.ofSuccess(analService.getManagerIncomeAnal(start, end));
     }
+
+    @RequestMapping(value = "/manager/teaching")
+    public Response<ManagerTeachingAnal> getManagerTeachingAnal(@JWTClaim LoginClaim claim, @JSONBody("start") Integer start, @JSONBody("end") Integer end) {
+        if (claim == null || claim.getUserType() != UserType.Manager) {
+            return Response.ofFailure("登录信息无效，请重新登录");
+        }
+        return Response.ofSuccess(analService.getManagerTeachingAnal(start, end));
+    }
 }

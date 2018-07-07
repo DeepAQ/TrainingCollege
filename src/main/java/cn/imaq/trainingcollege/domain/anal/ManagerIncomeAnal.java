@@ -27,4 +27,8 @@ public class ManagerIncomeAnal {
     private Map<String, Integer> byCollege = new HashMap<>();
 
     private Map<String, Integer> byTags = new HashMap<>();
+
+    private Map<String, Integer> ordersByCollege = new HashMap<>();
+
+    private Map<String, Integer> ordersByTags = new HashMap<>();
 }

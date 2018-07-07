@@ -19,6 +19,11 @@
     <ve-line :data="chartData5" width="1100px"></ve-line>
     <h3>每月收入趋势</h3>
     <ve-line :data="chartData1" width="1100px"></ve-line>
+    <h3>机构 / 类别订单数对比</h3>
+    <div style="display: flex;">
+      <ve-pie :data="chartData6" width="560px"></ve-pie>
+      <ve-pie :data="chartData7" width="560px"></ve-pie>
+    </div>
     <h3>机构 / 类别收入对比</h3>
     <div style="display: flex;">
       <ve-pie :data="chartData2" width="560px"></ve-pie>
@@ -56,6 +61,14 @@ export default {
       chartData5: {
         columns: [0, 1],
         rows: []
+      },
+      chartData6: {
+        columns: [0, 1],
+        rows: []
+      },
+      chartData7: {
+        columns: [0, 1],
+        rows: []
       }
     }
   },
@@ -75,6 +88,8 @@ export default {
           this.chartData3.rows = flatmap(result.byTags, 0.01)
           this.chartData4.rows = [['线上', result.onlineTotal / 100], ['线下', result.offlineTotal / 100]]
           this.chartData5.rows = flatmap(result.monthlyOrders)
+          this.chartData6.rows = flatmap(result.ordersByCollege)
+          this.chartData7.rows = flatmap(result.ordersByTags)
         }
       }).catch(reason => {
         this.$Message.error(reason)

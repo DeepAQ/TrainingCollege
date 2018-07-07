@@ -140,9 +140,11 @@ public class AnalService {
 
             String collegeName = collegeProfileMapper.getById(collegeMapper.getById(o.getCollegeId()).getProfileId()).getName();
             anal.getByCollege().put(collegeName, anal.getByCollege().getOrDefault(collegeName, 0) + o.getPayPrice());
+            anal.getOrdersByCollege().put(collegeName, anal.getOrdersByCollege().getOrDefault(collegeName, 0) + 1);
 
             String tagName = courseMapper.getById(o.getCourseId()).getTags();
             anal.getByTags().put(tagName, anal.getByTags().getOrDefault(tagName, 0) + o.getPayPrice());
+            anal.getOrdersByTags().put(tagName, anal.getOrdersByTags().getOrDefault(tagName, 0) + 1);
         });
 
         anal.setTotal(orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).mapToInt(o -> o.getPayPrice()).sum());
@@ -151,6 +153,30 @@ public class AnalService {
         anal.setOfflineTotal(anal.getTotal() - anal.getOnlineTotal());
         anal.setAvgPrice((int) orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).mapToInt(o -> o.getPayPrice()).average().getAsDouble());
         anal.setFinishRate(orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).count() * 1.0 / orders.size());
+        return anal;
+    }
+
+    public ManagerTeachingAnal getManagerTeachingAnal(Integer startTime, Integer endTime) {
+        ManagerTeachingAnal anal = new ManagerTeachingAnal();
+        List<Order> orders = orderMapper.getByTime(startTime, endTime);
+
+        final int[] totalPeriod = {0};
+        orders.stream().filter(o -> o.getStatus() == Order.Status.PAID).forEach(o -> {
+            Course c = courseMapper.getById(o.getCourseId());
+            String ym = DateUtil.toYearMonth(o.getCreated());
+            int period = c.getPeriod() * c.getWeeks();
+            totalPeriod[0] += period;
+            anal.getMonthly().put(ym, anal.getMonthly().getOrDefault(ym, 0) + period);
+
+            String collegeName = collegeProfileMapper.getById(collegeMapper.getById(o.getCollegeId()).getProfileId()).getName();
+            anal.getByCollege().put(collegeName, anal.getByCollege().getOrDefault(collegeName, 0) + period);
+
+            String tagName = courseMapper.getById(o.getCourseId()).getTags();
+            anal.getByTags().put(tagName, anal.getByTags().getOrDefault(tagName, 0) + period);
+        });
+
+        anal.setTotal(totalPeriod[0]);
+        anal.setCancelRate(orders.stream().filter(o -> o.getStatus() == Order.Status.CANCELLED).count() * 1.0 / orders.size());
         return anal;
     }
 }

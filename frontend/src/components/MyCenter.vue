@@ -77,8 +77,8 @@
           <MenuItem name="anal-income">
             <Icon type="pie-graph"></Icon> 收入分析
           </MenuItem>
-          <MenuItem name="anal-capacity">
-            <Icon type="pie-graph"></Icon> 规模分析
+          <MenuItem name="anal-teaching">
+            <Icon type="pie-graph"></Icon> 教学分析
           </MenuItem>
         </MenuGroup>
       </Menu>
