@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>学习分析</h2>
+    <h2>平台规模</h2>
     <div>
       选择分析周期：
       <DatePicker v-model="startTime" type="month" placeholder="起始时间"></DatePicker>
@@ -8,16 +8,13 @@
       <DatePicker v-model="endTime" type="month" placeholder="结束时间"></DatePicker>
       <Button type="primary" @click="loadData">开始分析</Button>
     </div>
-    <h3>总体上课情况</h3>
-    <div>参加总课时数：<span style="font-size: 24px;">{{anal.total}}</span></div>
-    <div>总体退课率：<span style="font-size: 24px;">{{Math.floor(anal.cancelRate * 10000) / 100}}%</span></div>
-    <h3>每月参加课时数趋势</h3>
+    <h3>总体用户规模</h3>
+    <div>已注册学员数：<span style="font-size: 24px;">{{anal.totalStudent}}</span></div>
+    <div>已注册机构数：<span style="font-size: 24px;">{{anal.totalCollege}}</span></div>
+    <h3>每月新注册学员</h3>
     <ve-line :data="chartData1" width="1100px"></ve-line>
-    <h3>参加课时数对比</h3>
-    <div style="display: flex;">
-      <ve-pie :data="chartData2" width="560px"></ve-pie>
-      <ve-pie :data="chartData3" width="560px"></ve-pie>
-    </div>
+    <h3>每月新注册机构</h3>
+    <ve-line :data="chartData2" width="1100px"></ve-line>
   </div>
 </template>
 
@@ -38,10 +35,6 @@ export default {
       chartData2: {
         columns: [0, 1],
         rows: []
-      },
-      chartData3: {
-        columns: [0, 1],
-        rows: []
       }
     }
   },
@@ -50,15 +43,14 @@ export default {
   },
   methods: {
     loadData () {
-      api('anal/student/study', {
+      api('anal/manager/platform', {
         start: Math.floor(this.startTime.getTime() / 1000) + '',
         end: Math.floor(this.endTime.getTime() / 1000) + ''
       }).then(result => {
         if (result) {
           this.anal = result
-          this.chartData1.rows = flatmap(result.monthly)
-          this.chartData2.rows = flatmap(result.byCourse)
-          this.chartData3.rows = flatmap(result.byTags)
+          this.chartData1.rows = flatmap(result.monthlyStudent)
+          this.chartData2.rows = flatmap(result.monthlyCollege)
         }
       }).catch(reason => {
         this.$Message.error(reason)

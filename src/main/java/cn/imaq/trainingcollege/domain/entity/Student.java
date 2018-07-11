@@ -26,6 +26,8 @@ public class Student {
 
     private Integer points;
 
+    private Integer created;
+
     public enum Status {
         NOT_VERIFIED,
         VERIFIED,

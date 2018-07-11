@@ -3,11 +3,16 @@ package cn.imaq.trainingcollege.mapper;
 import cn.imaq.trainingcollege.domain.entity.Student;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface StudentMapper {
     @Insert("INSERT INTO `students` (`email`, `pwd_hash`, `name`, `status`) VALUES (#{email}, #{pwdHash}, #{name}, #{status})")
     @Options(useGeneratedKeys = true)
     void insert(Student po);
+
+    @Select("SELECT * FROM `students`")
+    List<Student> getAll();
 
     @Select("SELECT * FROM `students` WHERE `email` = #{email}")
     Student getByEmail(String email);

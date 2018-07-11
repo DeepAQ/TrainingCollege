@@ -39,7 +39,7 @@ import flatmap from '@/flatmap'
 export default {
   data () {
     return {
-      startTime: new Date(new Date() - 6 * 30 * 24 * 3600000),
+      startTime: new Date(new Date() - 5 * 30 * 24 * 3600000),
       endTime: new Date(),
       anal: {},
       chartData1: {

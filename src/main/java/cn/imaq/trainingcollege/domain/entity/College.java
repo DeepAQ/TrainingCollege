@@ -17,4 +17,6 @@ public class College {
     private Integer profileId;
 
     private Integer pendingProfileId;
+
+    private Integer created;
 }

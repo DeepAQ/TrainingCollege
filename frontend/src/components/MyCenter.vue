@@ -80,6 +80,9 @@
           <MenuItem name="anal-teaching">
             <Icon type="pie-graph"></Icon> 教学分析
           </MenuItem>
+          <MenuItem name="anal-platform">
+            <Icon type="pie-graph"></Icon> 平台规模
+          </MenuItem>
         </MenuGroup>
       </Menu>
     </Sider>

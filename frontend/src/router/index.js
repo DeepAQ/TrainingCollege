@@ -24,6 +24,7 @@ import CollegeAnalIncome from '@/components/college/AnalIncome'
 import CollegeAnalTeaching from '@/components/college/AnalTeaching'
 import ManagerAnalIncome from '@/components/manager/AnalIncome'
 import ManagerAnalTeaching from '@/components/manager/AnalTeaching'
+import ManagerAnalPlatform from '@/components/manager/AnalPlatform'
 
 Vue.use(Router)
 
@@ -124,6 +125,10 @@ export default new Router({
         {
           path: 'manager/anal-teaching',
           component: ManagerAnalTeaching
+        },
+        {
+          path: 'manager/anal-platform',
+          component: ManagerAnalPlatform
         },
         {
           path: ':type/:op',
